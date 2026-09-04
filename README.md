@@ -20,7 +20,7 @@ npm run lint     # oxlint
 ```
 src/
 ├── components/
-│   ├── Navbar.jsx          fixed nav, "Free plan" chip, Go Premium CTA
+│   ├── Navbar.jsx          floating pill nav, progress hairline, Go Premium
 │   ├── Hero.jsx            usage counter → headline → CTA → cover marquee
 │   ├── LibraryPreview.jsx  the blocked ⇄ running phone pair in the hero
 │   ├── Comparison.jsx      Free vs Premium (table ≥ md, stacked cards below)
@@ -129,16 +129,29 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    number comes from and why the catalogue API's own figures contradict each
    other. Replace `PRICE_TABLE`; nothing else needs editing. `CURRENCY` switches
    the page between the USD and IDR tables.
-2. **The usage counters should be hydrated per user.** `USAGE` in `config.js` is
+2. **⚠️ The hero advertises the 3-day free trial.** The app really offers it —
+   its onboarding Trial screen says "Try all features free for 3 days" and
+   `/stripe/subscribe` takes `trial_days` — but the app gates it on
+   `has_used_trial`, and this page is written for people who have been using
+   the free plan long enough to exhaust it. Many will have already taken the
+   trial, and for them "$0 today" breaks at checkout. `TRIAL.show` in
+   `config.js` turns it off, falling back to the annual saving, which is true
+   for everyone; better still, hydrate it per user from the same flag.
+3. **CTAs point at `/profile/subscription/plans`**, the app's own plan picker,
+   read off its router table. Checkout continues from there to
+   `/profile/subscription/payment` and its confirmation / success / failed
+   screens. Linking straight to the payment route would land the user there
+   with no plan selected.
+4. **The usage counters should be hydrated per user.** `USAGE` in `config.js` is
    the fallback for a visitor we can't identify — the momentum framing only
    works if "3 of 3" is the reader's own number.
-3. **Every CTA carries `data-cta="<section>"`**, so GA4 can attribute the
+5. **Every CTA carries `data-cta="<section>"`**, so GA4 can attribute the
    upgrade to the section that earned it from one delegated listener.
-4. **Reviews are the six already published on booksnap.ai**, unedited. None of
+6. **Reviews are the six already published on booksnap.ai**, unedited. None of
    them has been rewritten to mention Premium. `PRICING_QUOTE_INDEX` picks the
    one quoted beside the price; the reviews board drops it so no quote appears
    twice.
-5. **The mockups are real product captures.** They are the only images on the
+7. **The mockups are real product captures.** They are the only images on the
    page that are not catalogue covers, which load live from the API.
    ⚠️ Do not source new screens from the booksnap.ai bundle: `hero-right` and
    `how-04` there are only 236×512, and scaling them up adds no detail — an
@@ -152,7 +165,7 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    ~210px the line is a few pixels tall and unreadable, but it is a real
    contradiction: replace it with a capture from an account where the counter
    is absent as soon as one exists.
-6. The page is `noindex` — it is an in-app / retargeting destination and should
+8. The page is `noindex` — it is an in-app / retargeting destination and should
    not compete with booksnap.ai in search.
 
 ## Responsive

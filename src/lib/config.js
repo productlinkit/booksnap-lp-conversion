@@ -9,8 +9,15 @@
 
 export const APP_URL = 'https://apps.booksnap.ai/'
 
-/** Deep link to the in-app checkout. Swap for the real upgrade route. */
-export const UPGRADE_URL = `${APP_URL}?upgrade=premium`
+/**
+ * The in-app plan picker — the real route, read off the app's own router table
+ * (`/profile/subscription/plans`), not a guessed query string. From there the
+ * app continues to /profile/subscription/payment and its
+ * confirmation / success / failed screens, so this is the entry to checkout
+ * rather than a detour. Linking straight to the payment route would land the
+ * user there with no plan selected.
+ */
+export const UPGRADE_URL = `${APP_URL}profile/subscription/plans`
 
 /**
  * The free-tier usage state this page is written against.
@@ -48,6 +55,7 @@ export const CURRENCY = 'USD' // 'USD' | 'IDR'
 
 const PRICE_TABLE = {
   USD: {
+    trialPrice: '$0',
     monthly: { amount: '$6.10', period: '/month' },
     annual: {
       amount: '$60.99',
@@ -59,6 +67,7 @@ const PRICE_TABLE = {
     paperback: 'Less than the price of one paperback. Unlimited books all month.',
   },
   IDR: {
+    trialPrice: 'Rp 0',
     monthly: { amount: 'Rp 42.999', period: '/bulan' },
     annual: {
       amount: 'Rp 429.999',
@@ -72,6 +81,28 @@ const PRICE_TABLE = {
 }
 
 export const PRICING = PRICE_TABLE[CURRENCY]
+
+/**
+ * ⚠️ THE FREE TRIAL — CHECK THE AUDIENCE BEFORE LEAVING THIS ON.
+ *
+ * The app really does offer this: its onboarding Trial screen reads "Try all
+ * features free for 3 days" behind a "Start Free Trial" button, and
+ * /stripe/subscribe takes a `trial_days` parameter.
+ *
+ * But the app gates it on `has_used_trial`, and this page is written for
+ * signed-in free-plan users who have already spent a month's snaps and Ask AI
+ * questions. A large share of them will have taken the trial during onboarding
+ * already, and for those readers a hero promising "$0 today" breaks at
+ * checkout — the worst possible place.
+ *
+ * Set `show: false` to fall back to the annual saving, which is true for
+ * everyone, or hydrate `show` per user from the same `has_used_trial` flag the
+ * app uses.
+ */
+export const TRIAL = {
+  show: true,
+  days: 3,
+}
 
 /** Verified brand facts, as published on booksnap.ai. */
 export const FACTS = {

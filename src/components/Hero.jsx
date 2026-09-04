@@ -1,4 +1,4 @@
-import { CTA, USAGE, RATING, FACTS } from '../lib/config'
+import { CTA, USAGE, RATING, FACTS, PRICING, TRIAL } from '../lib/config'
 import { LIBRARY } from '../lib/covers'
 import { useCountUp } from '../lib/hooks'
 import { Blob, CtaButton, Icon, Stars } from './primitives'
@@ -65,6 +65,47 @@ function ProofRow() {
   )
 }
 
+/**
+ * What the upgrade costs, stated in the hero.
+ *
+ * With the trial on it reads as a price that drops to nothing today; with it
+ * off it falls back to the annual saving, which holds for every reader. Both
+ * numbers come from `config.js` — see the warning above `TRIAL` before leaving
+ * the trial framing on for an audience that may already have used it.
+ */
+function PriceLine() {
+  const { monthly, annual, trialPrice } = PRICING
+
+  return (
+    <div className="mt-7 flex flex-col items-start gap-2">
+      <span
+        className="inline-flex flex-wrap items-baseline gap-x-2.5 gap-y-1 rounded-2xl px-4 py-2.5"
+        style={{ backgroundColor: 'var(--color-secondary-container)' }}
+      >
+        <span
+          className="text-[15px] line-through"
+          style={{ color: 'var(--color-primary-container)', opacity: 0.75 }}
+        >
+          {TRIAL.show ? monthly.amount : annual.strike}
+        </span>
+        <span className="text-[26px] font-extrabold leading-none sm:text-[30px]" style={{ color: 'var(--color-primary)' }}>
+          {TRIAL.show ? trialPrice : annual.amount}
+        </span>
+        <span className="text-[14px] font-semibold" style={{ color: 'var(--color-primary-container)' }}>
+          {TRIAL.show ? `for your first ${TRIAL.days} days` : `${annual.period} · save ${annual.savePct}%`}
+        </span>
+      </span>
+
+      <span className="flex items-center gap-1.5 text-[13px]" style={{ color: 'var(--color-on-surface-variant)' }}>
+        <Icon name="check_circle" className="text-[16px]" style={{ color: 'var(--color-primary-container)' }} />
+        {TRIAL.show
+          ? `Then ${monthly.amount}${monthly.period}. ${CTA.reassurance}`
+          : `${annual.perMonth}. ${CTA.reassurance}`}
+      </span>
+    </div>
+  )
+}
+
 export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden pb-10 pt-28 sm:pt-32 lg:pb-16 lg:pt-36">
@@ -116,6 +157,11 @@ export default function Hero() {
             audio, and early access to every new release.
           </p>
 
+          {/* The price, before the button rather than three sections below it.
+              A reader at their limit is deciding whether this is worth paying
+              for; making them scroll to find out is a needless step. */}
+          <PriceLine />
+
           {/* `flex-wrap` + `whitespace-nowrap`: on a ~450px column (1024px
               viewport) the second button drops to its own line rather than
               breaking either label across two lines mid-phrase. */}
@@ -134,14 +180,6 @@ export default function Hero() {
               See what&rsquo;s locked
             </CtaButton>
           </div>
-
-          <p
-            className="mt-4 flex items-center gap-1.5 text-[13px]"
-            style={{ color: 'var(--color-on-surface-variant)' }}
-          >
-            <Icon name="check_circle" className="text-[16px]" style={{ color: 'var(--color-primary-container)' }} />
-            {CTA.reassurance}
-          </p>
 
           {RATING && <ProofRow />}
         </div>

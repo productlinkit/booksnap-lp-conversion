@@ -29,14 +29,6 @@ export default function Navbar() {
       >
         <a href="#top" className="flex min-w-0 shrink items-center gap-2.5 pl-1 no-underline">
           <img src="/booksnap-logo.png" alt="BookSnap" className="h-6 w-auto sm:h-7" />
-          {/* This page is only ever served to a signed-in free user, so the nav
-              states which plan they are on — the whole argument starts there. */}
-          <span
-            className="hidden shrink-0 rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.07em] md:inline-block"
-            style={{ backgroundColor: 'var(--color-surface-container)', color: 'var(--color-on-surface-variant)' }}
-          >
-            Free plan
-          </span>
         </a>
 
         <div className="hidden items-center gap-7 lg:flex">
