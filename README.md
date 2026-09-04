@@ -27,7 +27,7 @@ src/
 │   ├── Pricing.jsx         monthly vs annual, annual recommended
 │   ├── AskAI.jsx           Ask AI deep dive + the real Ask AI screen
 │   ├── Testimonial.jsx     reviews + trust strip
-│   ├── FinalCTA.jsx        closing momentum push
+│   ├── FinalCTA.jsx        closing momentum push (deliberately bare)
 │   ├── Footer.jsx
 │   └── primitives.jsx      Icon, CtaButton, SectionLabel, SectionHead, Stars,
 │                           Phone (device frame), Blob, Flower
@@ -47,9 +47,9 @@ Static art lives in `public/`:
 public/
 ├── app/                    production booksnap.ai screen captures — the page's
 │   ├── screen-reading.png  mockups are the real app, not drawings of it.
-│   ├── screen-book.png     All four are 415×900, so they pair without
-│   ├── screen-askai.png    distortion. screen-askai already shows the
-│   └── screen-audio.png    in-product question counter.
+│   ├── screen-book.png     All three are 415×900, so they pair without
+│   └── screen-askai.png    distortion. screen-askai already shows the
+│                           in-product question counter.
 ├── flower-1.png            the site's cut-paper ornaments, re-cut to RGBA:
 └── flower-2.png            the originals ship an opaque ground that would
                             render as a pale rectangle on the dark panels.

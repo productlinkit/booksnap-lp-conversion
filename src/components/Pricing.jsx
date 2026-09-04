@@ -47,11 +47,11 @@ export default function Pricing() {
         <fieldset className="mt-12 border-0 p-0">
           <legend className="sr-only">Choose a billing period</legend>
 
-          <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1fr)] lg:gap-6">
+          <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1fr)] lg:gap-6">
             {/* ---------- Monthly: deliberately the quieter card ---------- */}
             <div
               onClick={() => setPlan('monthly')}
-              className="fade-left stagger-1 order-2 cursor-pointer rounded-[28px] p-6 transition-all duration-300 sm:p-7 lg:order-1 lg:mt-6"
+              className="fade-left stagger-1 order-2 cursor-pointer rounded-[28px] p-6 transition-all duration-300 sm:p-7 lg:order-1"
               style={{
                 backgroundColor: 'rgba(255,255,255,0.07)',
                 border: `1.5px solid ${plan === 'monthly' ? 'var(--color-tertiary-fixed)' : 'rgba(255,255,255,0.16)'}`,
@@ -87,6 +87,15 @@ export default function Pricing() {
 
               <p className="mt-3 text-[14px]" style={{ color: 'rgba(255,255,255,0.78)' }}>
                 Every Premium feature, billed month to month. Stop whenever you like.
+              </p>
+
+              <p
+                className="mt-4 flex items-start gap-2 text-[13.5px]"
+                style={{ color: 'rgba(255,255,255,0.62)' }}
+              >
+                <Icon name="info" className="mt-px shrink-0 text-[16px]" />
+                Same features as annual — you just pay as you go, and lose the{' '}
+                {PRICING.annual.savePct}% saving.
               </p>
 
               <CtaButton
