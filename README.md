@@ -46,11 +46,13 @@ Static art lives in `public/`:
 ```
 public/
 ├── app/                    production BookSnap captures — the page's mockups
-│   ├── screen-reading.png  are the real app, not drawings of it. All three
-│   ├── screen-book.png     are 415×900, so they pair without distortion.
-│   └── screen-limit.png    screen-limit is the Ask AI paywall itself: a real
-│                           exchange, the counter in red at 10/10, and the
-│                           app's own "Free limit reached" banner.
+│   ├── screen-book.png     are the real app, not drawings of it. 750×1624
+│   └── screen-limit.png    and 739×1600, near-identical aspect ratios, so
+│                           they pair without distortion. screen-limit is the
+│                           Ask AI paywall itself: a real exchange, the counter
+│                           in red at 10/10, and the "Free limit reached"
+│                           banner. It appears twice — drained and padlocked as
+│                           the hero's free plan, in full colour in Ask AI.
 ├── flower-1.png            the site's cut-paper ornaments, re-cut to RGBA:
 └── flower-2.png            the originals ship an opaque ground that would
                             render as a pale rectangle on the dark panels.
@@ -127,9 +129,13 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    them has been rewritten to mention Premium. `PRICING_QUOTE_INDEX` picks the
    one quoted beside the price; the reviews board drops it so no quote appears
    twice.
-5. **The mockups are real product captures**, pulled from the booksnap.ai
-   build. They are the only images on the page that are not the reader's own
-   catalogue covers, which are loaded live from the API.
+5. **The mockups are real product captures.** They are the only images on the
+   page that are not catalogue covers, which load live from the API.
+   ⚠️ Do not source new screens from the booksnap.ai bundle: `hero-right` and
+   `how-04` there are only 236×512, and scaling them up adds no detail — an
+   earlier version of this page shipped exactly that soft, upscaled mockup.
+   Take captures from the app at device resolution instead. The two in use are
+   ~740–750px wide, which covers a 3× display at the sizes they render.
 6. The page is `noindex` — it is an in-app / retargeting destination and should
    not compete with booksnap.ai in search.
 

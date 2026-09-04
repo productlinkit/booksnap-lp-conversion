@@ -8,6 +8,11 @@ import { Blob, Icon, Phone } from './primitives'
  * from booksnap.ai (`public/app/`), so the comparison is the actual app rather
  * than a drawing of it.
  *
+ * The free side is the production limit screen — the same capture the Ask AI
+ * section shows in full colour, here drained and behind a padlock, so the hero
+ * states the reader's situation with the product's own screen rather than a
+ * generic reading view.
+ *
  * Laid out as a two-column grid rather than overlapping absolute phones: the
  * pair then shrinks with the column all the way to 320px instead of colliding.
  * The floating chips sit above it and only appear from `sm` up, where there is
@@ -105,7 +110,7 @@ function Chip({ className, icon, label, value, tone }) {
 
 export default function LibraryPreview() {
   return (
-    <div className="relative mx-auto w-full max-w-[560px]">
+    <div className="relative mx-auto w-full max-w-[440px]">
       {/* Colour wash behind the pair, the same soft blobs the site uses. */}
       <Blob className="-left-10 top-4 h-56 w-56" color="var(--color-secondary-container)" opacity={0.5} />
       <Blob className="-right-8 bottom-6 h-64 w-64" color="var(--color-tertiary-fixed)" opacity={0.45} />
@@ -115,8 +120,8 @@ export default function LibraryPreview() {
         <figure className="m-0 flex flex-col items-center">
           <Phone
             className="animate-float-1 w-full"
-            src="/app/screen-reading.png"
-            alt="The BookSnap reader on the free plan, with this month's snaps used up"
+            src="/app/screen-limit.png"
+            alt="BookSnap on the free plan with the monthly limit reached"
             locked
           >
             <span

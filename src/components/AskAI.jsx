@@ -51,7 +51,7 @@ function PremiumChip() {
 
 function AskAiVisual() {
   return (
-    <div className="relative mx-auto w-full max-w-[420px] px-6 sm:px-10 lg:px-12">
+    <div className="relative mx-auto w-full max-w-[360px]">
       <Blob
         className="left-0 top-8 h-56 w-56"
         color="var(--color-secondary-container)"
@@ -65,7 +65,10 @@ function AskAiVisual() {
         data-parallax="0.19"
       />
 
-      <div className="relative z-10">
+      {/* The padding is the chips' runway — they hang into it rather than off
+          the container. The bar below sits outside it, so it gets the full
+          width instead of being squeezed into three lines. */}
+      <div className="relative z-10 px-6 sm:px-8 lg:px-10">
         <Phone
           className="animate-float-main"
           src="/app/screen-limit.png"
