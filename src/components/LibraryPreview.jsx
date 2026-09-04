@@ -119,70 +119,69 @@ function LibraryState({ premium }) {
   return (
     <div
       className="relative overflow-hidden rounded-[24px] p-3.5 sm:p-4"
-        style={{
-          backgroundColor: 'var(--color-surface-lowest)',
-          border: '1px solid rgba(0,54,37,0.09)',
-          boxShadow: premium ? '0 20px 44px rgba(0,54,37,0.14)' : '0 12px 30px rgba(0,54,37,0.07)',
-        }}
-      >
-        {!premium && <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-10" style={{ background: 'rgba(240,237,239,0.14)' }} />}
+      style={{
+        backgroundColor: 'var(--color-surface-lowest)',
+        border: '1px solid rgba(0,54,37,0.09)',
+        boxShadow: premium ? '0 20px 44px rgba(0,54,37,0.14)' : '0 12px 30px rgba(0,54,37,0.07)',
+      }}
+    >
+      {!premium && <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-10" style={{ background: 'rgba(240,237,239,0.14)' }} />}
 
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <div className="flex min-w-0 items-center gap-2">
-            <Icon name="auto_stories" className="text-[17px]" style={{ color: 'var(--color-primary)' }} />
-            <span className="truncate text-[13px] font-bold" style={{ color: 'var(--color-primary)' }}>
-              {premium ? 'Unlocked library' : 'Your library'}
-            </span>
-          </div>
-          <span
-            className="shrink-0 rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.07em]"
-            style={{
-              backgroundColor: premium ? 'var(--color-tertiary-fixed)' : 'var(--color-surface-container)',
-              color: premium ? 'var(--color-tertiary-container)' : 'var(--color-on-surface-variant)',
-              transition: 'background-color 0.5s ease, color 0.5s ease',
-            }}
-          >
-            {premium ? 'Premium' : 'Free'}
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <div className="flex min-w-0 items-center gap-2">
+          <Icon name="auto_stories" className="text-[17px]" style={{ color: 'var(--color-primary)' }} />
+          <span className="truncate text-[13px] font-bold" style={{ color: 'var(--color-primary)' }}>
+            {premium ? 'Unlocked library' : 'Your library'}
           </span>
         </div>
-
-        <MeterRow premium={premium} />
-
-        <ul className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
-          {LIBRARY.map((book) => (
-            <li key={book.title}>
-              <BookCover book={book} locked={!premium && !book.snapped} snapped={book.snapped} />
-            </li>
-          ))}
-        </ul>
-
-        <div
-          className="mt-3 flex items-center justify-between gap-2 rounded-xl px-3 py-2.5"
+        <span
+          className="shrink-0 rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.07em]"
           style={{
-            backgroundColor: premium ? 'var(--color-primary)' : 'var(--color-surface-container)',
-            transition: 'background-color 0.5s ease',
+            backgroundColor: premium ? 'var(--color-tertiary-fixed)' : 'var(--color-surface-container)',
+            color: premium ? 'var(--color-tertiary-container)' : 'var(--color-on-surface-variant)',
+            transition: 'background-color 0.5s ease, color 0.5s ease',
           }}
         >
-          <span className="flex min-w-0 items-center gap-2">
-            <Icon
-              name="forum"
-              className="shrink-0 text-[18px]"
-              style={{ color: premium ? 'var(--color-secondary-container)' : 'var(--color-on-surface-variant)' }}
-            />
-            <span
-              className="truncate text-[12px] font-semibold"
-              style={{ color: premium ? '#fff' : 'var(--color-on-surface-variant)' }}
-            >
-              Ask AI
-            </span>
-          </span>
+          {premium ? 'Premium' : 'Free'}
+        </span>
+      </div>
+
+      <MeterRow premium={premium} />
+
+      <ul className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
+        {LIBRARY.map((book) => (
+          <li key={book.title}>
+            <BookCover book={book} locked={!premium && !book.snapped} snapped={book.snapped} />
+          </li>
+        ))}
+      </ul>
+
+      <div
+        className="mt-3 flex items-center justify-between gap-2 rounded-xl px-3 py-2.5"
+        style={{
+          backgroundColor: premium ? 'var(--color-primary)' : 'var(--color-surface-container)',
+          transition: 'background-color 0.5s ease',
+        }}
+      >
+        <span className="flex min-w-0 items-center gap-2">
+          <Icon
+            name="forum"
+            className="shrink-0 text-[18px]"
+            style={{ color: premium ? 'var(--color-secondary-container)' : 'var(--color-on-surface-variant)' }}
+          />
           <span
-            className="shrink-0 text-[12px] font-bold tabular-nums"
-            style={{ color: premium ? 'var(--color-tertiary-fixed)' : 'var(--color-tertiary-ink)' }}
+            className="truncate text-[12px] font-semibold"
+            style={{ color: premium ? '#fff' : 'var(--color-on-surface-variant)' }}
           >
-            {premium ? 'Unlimited' : `${USAGE.askUsed} / ${USAGE.askTotal} used`}
+            Ask AI
           </span>
-        </div>
+        </span>
+        <span
+          className="shrink-0 text-[12px] font-bold tabular-nums"
+          style={{ color: premium ? 'var(--color-tertiary-fixed)' : 'var(--color-tertiary-ink)' }}
+        >
+          {premium ? 'Unlimited' : `${USAGE.askUsed} / ${USAGE.askTotal} used`}
+        </span>
       </div>
     </div>
   )
