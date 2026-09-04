@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { PRICING, CTA } from '../lib/config'
 import { PREMIUM_FEATURES } from '../lib/content'
-import { CtaButton, Icon, SectionHead } from './primitives'
+import { TESTIMONIALS, PRICING_QUOTE_INDEX } from '../lib/content'
+import { Blob, CtaButton, Flower, Icon, SectionHead, Stars } from './primitives'
 
 /**
  * Two plans, one recommended.
@@ -11,16 +12,26 @@ import { CtaButton, Icon, SectionHead } from './primitives'
  * sibling of the input rather than a child of a <label>, because a link inside
  * a label is invalid HTML and swallows the click on touch.
  */
+/** The Ask AI review, quoted beside the price because Ask AI is what is sold. */
+const QUOTE = TESTIMONIALS[PRICING_QUOTE_INDEX]
+
 export default function Pricing() {
   const [plan, setPlan] = useState('annual')
 
   return (
-    <section
-      id="pricing"
-      className="scroll-mt-24 py-16 sm:py-20 lg:py-24"
-      style={{ backgroundColor: 'var(--color-primary)' }}
-    >
-      <div className="mx-auto max-w-6xl px-4 sm:px-8 md:px-12">
+    <section id="pricing" className="scroll-mt-28 px-3 py-10 sm:px-6 sm:py-14 lg:py-16">
+      {/* The site's signature panel: a deep green card inset from the viewport
+          edge with the cut-paper flowers in its corners, not a full-bleed band. */}
+      <div
+        className="shell relative mx-auto max-w-[1150px] px-4 py-14 sm:px-8 md:py-20 lg:px-12"
+        style={{ backgroundColor: 'var(--color-primary)', boxShadow: '0 30px 80px rgba(0,54,37,0.28)' }}
+      >
+        <Flower src="/flower-1.png" className="-left-16 -top-16 w-48 md:w-72" opacity={0.14} />
+        <Flower src="/flower-2.png" className="-bottom-20 -right-16 w-52 md:w-80" opacity={0.14} />
+        <Blob className="left-[10%] top-6 h-64 w-64" color="var(--color-secondary-container)" opacity={0.16} />
+        <Blob className="bottom-6 right-[8%] h-64 w-64" color="var(--color-tertiary-fixed)" opacity={0.14} />
+
+        <div className="relative mx-auto max-w-6xl">
         <div className="fade-up flex justify-center">
           <SectionHead
             label="Premium"
@@ -166,7 +177,7 @@ export default function Pricing() {
                 ))}
               </ul>
 
-              <CtaButton location="pricing-annual" size="lg" className="mt-7 w-full">
+              <CtaButton location="pricing-annual" size="lg" className="cta-sheen mt-7 w-full">
                 <Icon name="lock_open" className="text-[19px]" />
                 {CTA.pricing}
               </CtaButton>
@@ -181,6 +192,18 @@ export default function Pricing() {
             </div>
           </div>
         </fieldset>
+
+        {/* One power user, right where the price is — the brief's quote block. */}
+        <figure className="fade-up glass-card-dark mx-auto mt-10 flex max-w-2xl flex-col items-center gap-3 rounded-[24px] p-5 text-center sm:mt-12 sm:p-6">
+          <Stars color="var(--color-tertiary-fixed)" />
+          <blockquote className="rsp-section-p m-0" style={{ color: '#fff' }}>
+            &ldquo;{QUOTE.quote}&rdquo;
+          </blockquote>
+          <figcaption className="text-[13px]" style={{ color: 'rgba(255,255,255,0.72)' }}>
+            <strong style={{ color: 'var(--color-secondary-container)' }}>{QUOTE.name}</strong> · {QUOTE.role}
+          </figcaption>
+        </figure>
+        </div>
       </div>
     </section>
   )

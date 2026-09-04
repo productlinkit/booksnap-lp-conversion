@@ -1,211 +1,156 @@
-import { useState } from 'react'
-import { LIBRARY } from '../lib/covers'
 import { USAGE } from '../lib/config'
-import { Icon } from './primitives'
+import { Blob, Icon, Phone } from './primitives'
 
 /**
- * The hero visual: the reader's own BookSnap library, shown locked and then
- * unlocked. It is built from the real app's parts — the usage meter, the cover
- * grid, the Ask AI counter — rather than an illustration, because the argument
- * ("this is your account, and this is what the limit is holding shut") only
- * lands if the thing on screen is recognisably the product.
+ * The hero visual: the same product, twice — the free plan drained and locked,
+ * Premium in full colour beside it. Both panes are real production screenshots
+ * from booksnap.ai (`public/app/`), so the comparison is the actual app rather
+ * than a drawing of it.
+ *
+ * Laid out as a two-column grid rather than overlapping absolute phones: the
+ * pair then shrinks with the column all the way to 320px instead of colliding.
+ * The floating chips sit above it and only appear from `sm` up, where there is
+ * room for them to overlap the frames without covering the screens.
  */
 
-function BookCover({ book, locked, snapped }) {
-  const [failed, setFailed] = useState(false)
-
+function PlanTag({ premium }) {
   return (
-    <div
-      className={`cover-tile relative overflow-hidden rounded-xl ${locked ? 'is-locked' : ''}`}
-      style={{ backgroundColor: 'var(--color-surface-container)' }}
+    <span
+      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.08em] sm:text-[12px]"
+      style={
+        premium
+          ? { backgroundColor: 'var(--color-tertiary-fixed)', color: 'var(--color-tertiary-container)' }
+          : { backgroundColor: 'var(--color-surface-container)', color: 'var(--color-on-surface-variant)' }
+      }
     >
-      <div className="aspect-[2/3] w-full">
-        {failed ? (
-          // A remote cover that fails should still read as a book, never as a
-          // broken image icon inside a product mock.
-          <div
-            className="flex h-full w-full flex-col justify-end p-2"
-            style={{ backgroundColor: 'var(--color-primary-container)' }}
-          >
-            <span className="text-[9px] font-semibold leading-tight text-white/90 line-clamp-3">
-              {book.title}
-            </span>
-          </div>
-        ) : (
-          <img
-            src={book.cover}
-            alt=""
-            loading="lazy"
-            decoding="async"
-            onError={() => setFailed(true)}
-            className="h-full w-full object-cover"
-          />
-        )}
-      </div>
-
-      {/* Locked scrim + padlock, or the "you already snapped this" tick. */}
-      <span
-        className={`lock-chip absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full ${
-          locked ? '' : 'is-hidden'
-        }`}
-        style={{ backgroundColor: 'rgba(27,27,29,0.72)', color: '#fff' }}
-      >
-        <Icon name="lock" className="text-[13px]" />
-      </span>
-      {snapped && (
-        <span
-          className={`lock-chip absolute right-1.5 top-1.5 grid h-6 w-6 place-items-center rounded-full ${
-            locked ? 'is-hidden' : ''
-          }`}
-          style={{ backgroundColor: 'var(--color-secondary-container)', color: 'var(--color-primary)' }}
-          title="Already snapped"
-        >
-          <Icon name="check" className="text-[14px]" />
-        </span>
-      )}
-    </div>
+      <Icon name={premium ? 'lock_open' : 'lock'} className="text-[14px]" />
+      {premium ? 'Premium' : 'Free plan'}
+    </span>
   )
 }
 
-function MeterRow({ premium }) {
-  const pct = premium ? 100 : Math.round((USAGE.snapsUsed / USAGE.snapsTotal) * 100)
-
+/** The usage meter that sits under each phone — full on Free, open on Premium. */
+function Meter({ premium }) {
   return (
-    <div
-      className="rounded-2xl p-3.5"
-      style={{
-        backgroundColor: premium ? 'rgba(164,244,191,0.34)' : 'var(--color-surface-container)',
-        transition: 'background-color 0.5s ease',
-      }}
-    >
-      <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-        <span className="text-[13px] font-semibold" style={{ color: 'var(--color-primary)' }}>
-          Book Snaps
-        </span>
+    <div className="mt-3 w-full">
+      <div className="flex items-baseline justify-between gap-2 text-[11px] font-semibold sm:text-[12px]">
+        <span style={{ color: 'var(--color-on-surface-variant)' }}>Snaps</span>
         <span
-          className="text-[13px] font-bold tabular-nums"
+          className="tabular-nums font-bold"
           style={{ color: premium ? 'var(--color-primary)' : 'var(--color-tertiary-ink)' }}
         >
-          {premium ? 'Unlimited' : `${USAGE.snapsUsed} / ${USAGE.snapsTotal} used`}
+          {premium ? 'Unlimited' : `${USAGE.snapsUsed}/${USAGE.snapsTotal}`}
         </span>
       </div>
-
       <div
-        className="mt-2.5 h-2 w-full overflow-hidden rounded-full"
-        style={{ backgroundColor: 'rgba(0,54,37,0.10)' }}
-        role="progressbar"
-        aria-valuenow={pct}
-        aria-valuemin={0}
-        aria-valuemax={100}
-        aria-label={premium ? 'Unlimited Book Snaps' : 'Free Book Snaps used'}
+        className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full"
+        style={{ backgroundColor: 'var(--color-surface-container)' }}
       >
         <div
-          className="meter-fill h-full rounded-full"
+          className={`meter-fill h-full rounded-full ${premium ? '' : 'meter-full'}`}
           style={{
-            width: `${pct}%`,
+            width: '100%',
             backgroundColor: premium ? 'var(--color-primary)' : 'var(--color-tertiary-fixed)',
           }}
         />
       </div>
-
-      <p className="mt-2 text-[11.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-        {premium ? 'No monthly cap. Snap as many as you like.' : `Limit reached — resets next month.`}
-      </p>
     </div>
   )
 }
 
-function LibraryState({ premium }) {
+/** A floating stat chip. `tone="gold"` marks the one that states the payoff. */
+function Chip({ className, icon, label, value, tone }) {
+  const gold = tone === 'gold'
   return (
-    <div
-      className="relative overflow-hidden rounded-[24px] p-3.5 sm:p-4"
-      style={{
-        backgroundColor: 'var(--color-surface-lowest)',
-        border: '1px solid rgba(0,54,37,0.09)',
-        boxShadow: premium ? '0 20px 44px rgba(0,54,37,0.14)' : '0 12px 30px rgba(0,54,37,0.07)',
-      }}
+    <span
+      className={`glass-card absolute hidden items-center gap-2.5 rounded-2xl px-3.5 py-2.5 sm:flex ${className}`}
+      style={gold ? { background: 'var(--color-tertiary-fixed)', border: '1px solid rgba(255,255,255,0.6)' } : undefined}
     >
-      {!premium && <span aria-hidden="true" className="pointer-events-none absolute inset-0 z-10" style={{ background: 'rgba(240,237,239,0.14)' }} />}
-
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <div className="flex min-w-0 items-center gap-2">
-          <Icon name="auto_stories" className="text-[17px]" style={{ color: 'var(--color-primary)' }} />
-          <span className="truncate text-[13px] font-bold" style={{ color: 'var(--color-primary)' }}>
-            {premium ? 'Unlocked library' : 'Your library'}
-          </span>
-        </div>
-        <span
-          className="shrink-0 rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.07em]"
-          style={{
-            backgroundColor: premium ? 'var(--color-tertiary-fixed)' : 'var(--color-surface-container)',
-            color: premium ? 'var(--color-tertiary-container)' : 'var(--color-on-surface-variant)',
-            transition: 'background-color 0.5s ease, color 0.5s ease',
-          }}
-        >
-          {premium ? 'Premium' : 'Free'}
-        </span>
-      </div>
-
-      <MeterRow premium={premium} />
-
-      <ul className="mt-3 grid grid-cols-3 gap-1.5 sm:gap-2">
-        {LIBRARY.map((book) => (
-          <li key={book.title}>
-            <BookCover book={book} locked={!premium && !book.snapped} snapped={book.snapped} />
-          </li>
-        ))}
-      </ul>
-
-      <div
-        className="mt-3 flex items-center justify-between gap-2 rounded-xl px-3 py-2.5"
+      <span
+        className="grid h-8 w-8 shrink-0 place-items-center rounded-full"
         style={{
-          backgroundColor: premium ? 'var(--color-primary)' : 'var(--color-surface-container)',
-          transition: 'background-color 0.5s ease',
+          backgroundColor: gold ? 'rgba(255,255,255,0.55)' : 'var(--color-secondary-container)',
+          color: gold ? 'var(--color-tertiary-container)' : 'var(--color-primary)',
         }}
       >
-        <span className="flex min-w-0 items-center gap-2">
-          <Icon
-            name="forum"
-            className="shrink-0 text-[18px]"
-            style={{ color: premium ? 'var(--color-secondary-container)' : 'var(--color-on-surface-variant)' }}
-          />
-          <span
-            className="truncate text-[12px] font-semibold"
-            style={{ color: premium ? '#fff' : 'var(--color-on-surface-variant)' }}
-          >
-            Ask AI
-          </span>
+        <Icon name={icon} className="text-[17px]" />
+      </span>
+      <span className="min-w-0 leading-tight">
+        <span
+          className="block text-[10px] font-bold uppercase tracking-[0.07em]"
+          style={{ color: gold ? 'var(--color-tertiary-ink)' : 'var(--color-on-surface-variant)' }}
+        >
+          {label}
         </span>
         <span
-          className="shrink-0 text-[12px] font-bold tabular-nums"
-          style={{ color: premium ? 'var(--color-tertiary-fixed)' : 'var(--color-tertiary-ink)' }}
+          className="block text-[13px] font-extrabold"
+          style={{ color: gold ? 'var(--color-tertiary-container)' : 'var(--color-primary)' }}
         >
-          {premium ? 'Unlimited' : `${USAGE.askUsed} / ${USAGE.askTotal} used`}
+          {value}
         </span>
-      </div>
-    </div>
+      </span>
+    </span>
   )
 }
 
 export default function LibraryPreview() {
   return (
-    <div className="mx-auto w-full max-w-[560px]">
-      <div className="mb-3 flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-[0.1em]" style={{ color: 'var(--color-on-surface-variant)' }}>
-        <span className="h-px w-8" style={{ backgroundColor: 'var(--color-outline-variant)' }} />
-        Your upgrade, side by side
-        <span className="h-px w-8" style={{ backgroundColor: 'var(--color-outline-variant)' }} />
+    <div className="relative mx-auto w-full max-w-[560px]">
+      {/* Colour wash behind the pair, the same soft blobs the site uses. */}
+      <Blob className="-left-10 top-4 h-56 w-56" color="var(--color-secondary-container)" opacity={0.5} />
+      <Blob className="-right-8 bottom-6 h-64 w-64" color="var(--color-tertiary-fixed)" opacity={0.45} />
+
+      <div className="relative grid grid-cols-2 items-end gap-3 sm:gap-5">
+        {/* ---------- Free: what the reader is looking at right now ---------- */}
+        <figure className="m-0 flex flex-col items-center">
+          <Phone
+            className="animate-float-1 w-full"
+            src="/app/screen-reading.png"
+            alt="The BookSnap reader on the free plan, with this month's snaps used up"
+            locked
+          >
+            <span
+              className="absolute left-1/2 top-1/2 z-[2] grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full sm:h-14 sm:w-14"
+              style={{ backgroundColor: 'rgba(252,248,251,0.92)', color: 'var(--color-primary)' }}
+            >
+              <Icon name="lock" className="text-[22px] sm:text-[26px]" />
+            </span>
+          </Phone>
+          <figcaption className="mt-3 flex w-full flex-col items-center">
+            <PlanTag premium={false} />
+            <Meter premium={false} />
+          </figcaption>
+        </figure>
+
+        {/* ---------- Premium: the same app with the ceiling removed ---------- */}
+        <figure className="m-0 flex flex-col items-center">
+          <Phone
+            className="animate-float-3 w-full"
+            src="/app/screen-book.png"
+            alt="The BookSnap reader on Premium, with unlimited snaps"
+            style={{ boxShadow: '0 26px 60px rgba(0,54,37,0.30)' }}
+          />
+          <figcaption className="mt-3 flex w-full flex-col items-center">
+            <PlanTag premium />
+            <Meter premium />
+          </figcaption>
+        </figure>
       </div>
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
-        <LibraryState premium={false} />
-        <LibraryState premium />
-      </div>
-      <p
-        className="mt-3 text-center text-[12px]"
-        style={{ color: 'var(--color-on-surface-variant)' }}
-      >
-        <Icon name="lock_open" className="mr-1 align-[-3px] text-[15px]" />
-        Same library. No ceiling.
-      </p>
+
+      {/* Floating chips — the two numbers the whole page argues about. */}
+      <Chip
+        className="animate-float-2 -left-6 top-[18%] md:-left-10"
+        icon="forum"
+        label="Ask AI"
+        value={`${USAGE.askUsed}/${USAGE.askTotal} used`}
+      />
+      <Chip
+        className="animate-float-4 -right-4 top-[46%] md:-right-8"
+        icon="all_inclusive"
+        label="On Premium"
+        value="No limit"
+        tone="gold"
+      />
     </div>
   )
 }

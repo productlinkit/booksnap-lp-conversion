@@ -1,10 +1,10 @@
 /**
- * Real covers from the BookSnap catalogue (https://be.booksnap.ai/api/v1/books).
- * The hero visual is a mock of the reader's own library, so it uses the actual
- * titles in it — invented covers would break the "this is your app" illusion.
+ * Real covers from the BookSnap catalogue (https://be.booksnap.ai/api/v1/books),
+ * loaded live rather than bundled. They scroll past under the hero as the thing
+ * the monthly limit is holding shut — invented covers would break the "this is
+ * your app" illusion the whole page runs on.
  *
- * `snapped` marks the three the free plan already spent this month; the rest
- * are what the limit is currently holding shut.
+ * `snapped` marks the three the free plan already spent this month.
  */
 export const LIBRARY = [
   {
@@ -62,6 +62,3 @@ export const LIBRARY = [
     snapped: false,
   },
 ]
-
-/** The book the Ask AI mock is scoped to — it quotes this title's framework. */
-export const ASK_AI_BOOK = LIBRARY[0]

@@ -113,3 +113,43 @@ export function SectionHead({ label, labelTone, labelInk, title, sub, align = 'c
     </div>
   )
 }
+
+/**
+ * A real app screenshot inside a device bezel. `locked` drains the colour and
+ * drops the scrim over it — the free plan's half of the hero.
+ *
+ * Screens live in `public/app/` and are the production booksnap.ai captures,
+ * so the mockups show the actual product rather than a drawn approximation.
+ */
+export function Phone({ src, alt, locked = false, className = '', style, children }) {
+  return (
+    <div className={`phone ${locked ? 'phone-locked' : ''} ${className}`} style={style}>
+      <img src={src} alt={alt} loading="lazy" decoding="async" />
+      {children}
+    </div>
+  )
+}
+
+/** A soft colour wash. Purely decorative, never in the accessibility tree. */
+export function Blob({ className = '', color, opacity = 0.4 }) {
+  return (
+    <span aria-hidden="true" className={`blob ${className}`} style={{ backgroundColor: color, opacity }} />
+  )
+}
+
+/**
+ * The cut-paper flowers booksnap.ai parks in the corners of its dark panels.
+ * Hidden below `sm` — at phone width they eat the padding the copy needs.
+ */
+export function Flower({ src, className = '', opacity = 0.5 }) {
+  return (
+    <img
+      src={src}
+      alt=""
+      aria-hidden="true"
+      loading="lazy"
+      className={`pointer-events-none absolute hidden select-none sm:block ${className}`}
+      style={{ opacity }}
+    />
+  )
+}

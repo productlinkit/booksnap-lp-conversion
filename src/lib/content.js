@@ -103,33 +103,16 @@ export const ASK_AI_BENEFITS = [
   },
 ]
 
-/**
- * The Ask AI mock. Written as a real exchange about a real framework from a
- * real title in the catalogue — a generic assistant script would give away
- * that this is marketing rather than the product.
- */
-export const ASK_AI_THREAD = [
-  { from: 'user', text: 'Remind me what the four laws of behaviour change are?' },
-  {
-    from: 'ai',
-    text: 'Make it obvious, make it attractive, make it easy, make it satisfying. Each law has an inversion for breaking a habit — make it invisible, unattractive, difficult, unsatisfying.',
-    source: 'Chapter 2 · The Four Laws',
-  },
-  { from: 'user', text: 'Which one do people get wrong most often?' },
-  {
-    from: 'ai',
-    text: '"Make it easy." Most people over-invest in motivation and under-invest in friction. Clear argues that cutting the steps between you and the habit beats wanting it more.',
-    source: 'Chapter 12 · The Law of Least Effort',
-  },
-]
-
 /** The question the free plan will not answer — the moment the page is about. */
 export const ASK_AI_BLOCKED = 'So how do I design my morning around that?'
 
 /**
- * Real reviews as published on booksnap.ai. Not rewritten to mention Premium:
- * putting words about a paid plan into a named reader's mouth is not something
- * a landing page gets to do.
+ * All six reviews as published on booksnap.ai, unedited. None has been
+ * rewritten to mention Premium: putting words about a paid plan into a named
+ * reader's mouth is not something a landing page gets to do.
+ *
+ * `tilt` mirrors the slight rotation the site gives each review card, so the
+ * block reads as a pinned board rather than a grid of boxes.
  */
 export const TESTIMONIALS = [
   {
@@ -139,6 +122,7 @@ export const TESTIMONIALS = [
     quote:
       'BookSnap has completely changed how I consume information. I read 3 books a week now during my commute.',
     tint: 'var(--color-secondary-container)',
+    tilt: '-1.5deg',
   },
   {
     initials: 'ER',
@@ -147,6 +131,16 @@ export const TESTIMONIALS = [
     quote:
       'The Ask AI feature is a game-changer. Whenever I need to recall a specific framework from a book, I just ask.',
     tint: 'var(--color-primary-fixed)',
+    tilt: '1.5deg',
+  },
+  {
+    initials: 'DC',
+    name: 'David Chen',
+    role: 'Entrepreneur',
+    quote:
+      "The audio quality is phenomenal. It doesn't sound like a robot reading text. Highly recommend for busy professionals.",
+    tint: 'var(--color-tertiary-fixed)',
+    tilt: '2deg',
   },
   {
     initials: 'SA',
@@ -154,9 +148,31 @@ export const TESTIMONIALS = [
     role: 'Graduate Student',
     quote:
       "It's like having a personal tutor for every non-fiction book I own. The AI insights are incredibly sharp.",
+    tint: 'var(--color-secondary-container)',
+    tilt: '-2deg',
+  },
+  {
+    initials: 'MT',
+    name: 'Marcus Thorne',
+    role: 'Tech Lead',
+    quote:
+      'The StoryFlow summaries are a masterpiece of information density. I can stay updated on my industry in minutes.',
+    tint: 'var(--color-primary-fixed)',
+    tilt: '1deg',
+  },
+  {
+    initials: 'JL',
+    name: 'Jordan Lee',
+    role: 'Creative Director',
+    quote:
+      "The UI is a breath of fresh air. It's rare to find an app that is both this powerful and this beautiful.",
     tint: 'var(--color-tertiary-fixed)',
+    tilt: '-1deg',
   },
 ]
+
+/** The one quoted beside the price. Excluded from the reviews board below it. */
+export const PRICING_QUOTE_INDEX = 1
 
 export const TRUST = [
   { icon: 'lock', label: 'Secure payment', sub: 'Processed by Stripe' },
