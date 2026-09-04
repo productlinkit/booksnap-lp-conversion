@@ -77,9 +77,13 @@ screen of the product rather than a campaign microsite:
 | `--color-tertiary-fixed` | `#ffe08f` | the primary CTA pill, focus ring |
 | `--color-surface` / `-lowest` | `#fcf8fb` / `#ffffff` | page and card grounds |
 
-Type is Plus Jakarta Sans (display) over Inter (body), both loaded from Google
-Fonts in `index.html`, with Material Symbols Outlined for icons — the same three
-faces the production site ships. No icon library is added as a dependency.
+Type is Plus Jakarta Sans throughout — headings separate themselves by weight
+(800) and size, not by family — with Material Symbols Outlined for icons. Both
+load from Google Fonts in `index.html`; no icon library is added as a
+dependency. Inter was loaded alongside it and used for body copy; it is gone,
+which also removes a webfont request. (Worth knowing: the production
+booksnap.ai bundle imports Inter too and never applies it — `font-family:Inter`
+appears nowhere in its compiled CSS.)
 
 The motion and surface vocabulary in `index.css` is mirrored from the same
 build, with the site's own durations and easings:
