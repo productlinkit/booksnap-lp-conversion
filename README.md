@@ -45,11 +45,12 @@ Static art lives in `public/`:
 
 ```
 public/
-├── app/                    production booksnap.ai screen captures — the page's
-│   ├── screen-reading.png  mockups are the real app, not drawings of it.
-│   ├── screen-book.png     All three are 415×900, so they pair without
-│   └── screen-askai.png    distortion. screen-askai already shows the
-│                           in-product question counter.
+├── app/                    production BookSnap captures — the page's mockups
+│   ├── screen-reading.png  are the real app, not drawings of it. All three
+│   ├── screen-book.png     are 415×900, so they pair without distortion.
+│   └── screen-limit.png    screen-limit is the Ask AI paywall itself: a real
+│                           exchange, the counter in red at 10/10, and the
+│                           app's own "Free limit reached" banner.
 ├── flower-1.png            the site's cut-paper ornaments, re-cut to RGBA:
 └── flower-2.png            the originals ship an opaque ground that would
                             render as a pale rectangle on the dark panels.

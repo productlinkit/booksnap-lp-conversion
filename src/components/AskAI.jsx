@@ -1,4 +1,4 @@
-import { ASK_AI_BENEFITS, ASK_AI_BLOCKED } from '../lib/content'
+import { ASK_AI_BENEFITS } from '../lib/content'
 import { USAGE, CTA } from '../lib/config'
 import { Blob, CtaButton, Icon, Phone, SectionLabel } from './primitives'
 
@@ -6,51 +6,43 @@ import { Blob, CtaButton, Icon, Phone, SectionLabel } from './primitives'
  * Ask AI is the reason Premium is not just "more summaries" — it is what turns
  * a snap into a tutor.
  *
- * The visual is the production Ask AI screen itself (`public/app/screen-askai.png`,
- * captured from booksnap.ai), which already shows the question counter running
- * down inside the product. The chips floating over it carry the argument the
- * screenshot cannot: the counter is about to run out, and Premium removes it.
+ * The visual is the production limit screen (`public/app/screen-limit.png`),
+ * and it does the whole job on its own: a real question, a real answer, a
+ * second question mid-flight, the counter in red at "10/10 questions used",
+ * and the app's own "Free limit reached" banner underneath. It shows Ask AI
+ * working *and* the wall, which is exactly the argument this section makes.
+ *
+ * Because the screenshot states the counter itself, the chip that used to
+ * repeat it is gone. What is left beside the frame is the one thing the
+ * screenshot cannot show — the same screen without a counter on it.
  */
 
-/** A stat chip floating over the frame. `tone="gold"` states the payoff. */
-function Chip({ className, icon, label, value, tone }) {
-  const gold = tone === 'gold'
+/** The Premium counterpoint to the counter inside the screenshot. */
+function PremiumChip() {
   return (
     <span
-      className={`absolute z-20 hidden items-center gap-2.5 rounded-2xl px-3.5 py-2.5 sm:flex ${
-        gold ? '' : 'glass-card'
-      } ${className}`}
-      style={
-        gold
-          ? {
-              backgroundColor: 'var(--color-tertiary-fixed)',
-              border: '1px solid rgba(255,255,255,0.6)',
-              boxShadow: '0 10px 34px rgba(0,54,37,0.14)',
-            }
-          : undefined
-      }
+      className="animate-float-4 absolute -right-5 top-[62%] z-20 hidden items-center gap-2.5 rounded-2xl px-3.5 py-2.5 sm:flex md:-right-9"
+      style={{
+        backgroundColor: 'var(--color-tertiary-fixed)',
+        border: '1px solid rgba(255,255,255,0.6)',
+        boxShadow: '0 10px 34px rgba(0,54,37,0.14)',
+      }}
     >
       <span
         className="grid h-8 w-8 shrink-0 place-items-center rounded-full"
-        style={{
-          backgroundColor: gold ? 'rgba(255,255,255,0.6)' : 'var(--color-error-container)',
-          color: gold ? 'var(--color-tertiary-container)' : 'var(--color-primary)',
-        }}
+        style={{ backgroundColor: 'rgba(255,255,255,0.6)', color: 'var(--color-tertiary-container)' }}
       >
-        <Icon name={icon} className="text-[17px]" />
+        <Icon name="all_inclusive" className="text-[17px]" />
       </span>
       <span className="leading-tight">
         <span
           className="block text-[10px] font-bold uppercase tracking-[0.07em]"
-          style={{ color: gold ? 'var(--color-tertiary-ink)' : 'var(--color-on-surface-variant)' }}
+          style={{ color: 'var(--color-tertiary-ink)' }}
         >
-          {label}
+          On Premium
         </span>
-        <span
-          className="block text-[13px] font-extrabold"
-          style={{ color: gold ? 'var(--color-tertiary-container)' : 'var(--color-primary)' }}
-        >
-          {value}
+        <span className="block text-[13px] font-extrabold" style={{ color: 'var(--color-tertiary-container)' }}>
+          No counter at all
         </span>
       </span>
     </span>
@@ -60,75 +52,45 @@ function Chip({ className, icon, label, value, tone }) {
 function AskAiVisual() {
   return (
     <div className="relative mx-auto w-full max-w-[420px] px-6 sm:px-10 lg:px-12">
-      <Blob className="left-0 top-8 h-56 w-56" color="var(--color-secondary-container)" opacity={0.55} data-parallax="0.13" />
-      <Blob className="bottom-4 right-0 h-52 w-52" color="var(--color-tertiary-fixed)" opacity={0.45} data-parallax="0.19" />
+      <Blob
+        className="left-0 top-8 h-56 w-56"
+        color="var(--color-secondary-container)"
+        opacity={0.55}
+        data-parallax="0.13"
+      />
+      <Blob
+        className="bottom-4 right-0 h-52 w-52"
+        color="var(--color-tertiary-fixed)"
+        opacity={0.45}
+        data-parallax="0.19"
+      />
 
-      {/* Chips are anchored to the frame, not to the whole block — percentages
-          measured against the block would drop them behind the card below. */}
       <div className="relative z-10">
         <Phone
           className="animate-float-main"
-          src="/app/screen-askai.png"
-          alt="The Ask AI screen in BookSnap, showing the monthly question counter"
+          src="/app/screen-limit.png"
+          alt="Ask AI in BookSnap after the tenth question: the counter reads 10 of 10 used and the free limit banner has appeared"
         />
-
-        {/* The two numbers the section argues about, lifted out of the screen. */}
-        <Chip
-          className="animate-float-2 -left-6 top-[16%] md:-left-10"
-          icon="lock"
-          label="Free plan"
-          value={`${USAGE.askUsed}/${USAGE.askTotal} questions used`}
-        />
-        <Chip
-          className="animate-float-4 -right-5 bottom-[14%] md:-right-9"
-          icon="all_inclusive"
-          label="Premium"
-          value="Ask without counting"
-          tone="gold"
-        />
+        <PremiumChip />
       </div>
 
-      {/* The wall: the next question, typed and refused. Rendered as the
-          reader's own outgoing bubble rather than a text field — the screenshot
-          above already shows the real composer, and a second one read as a bug. */}
+      {/* The banner inside the screenshot is a picture, and it already states
+          the limit. This is the pressable one, so it states the resolution
+          instead of repeating it — and it is green, not a second gold block
+          150px under the first. */}
       <div
-        className="relative z-20 mt-4 rounded-[22px] p-3.5"
+        className="relative z-20 mt-4 flex flex-col gap-3 rounded-[22px] p-4 sm:flex-row sm:items-center sm:justify-between"
         style={{
-          backgroundColor: 'var(--color-surface-lowest)',
-          border: '1px solid rgba(0,54,37,0.08)',
-          boxShadow: '0 18px 44px rgba(0,54,37,0.14)',
+          backgroundColor: 'var(--color-primary)',
+          boxShadow: '0 18px 44px rgba(0,54,37,0.20)',
         }}
       >
-        <p
-          className="mb-2 text-[10.5px] font-bold uppercase tracking-[0.08em]"
-          style={{ color: 'var(--color-on-surface-variant)' }}
-        >
-          Your next question
+        <p className="text-[13.5px] font-bold" style={{ color: '#fff' }}>
+          On Premium, that banner never appears.
         </p>
-        <div className="flex justify-end">
-          <span
-            className="inline-flex max-w-full items-center gap-2 rounded-[18px] rounded-br-md px-3.5 py-2.5"
-            style={{ backgroundColor: 'var(--color-surface-container)' }}
-          >
-            <span className="min-w-0 text-[13px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-              {ASK_AI_BLOCKED}
-              <span className="caret" />
-            </span>
-            <Icon name="lock" className="shrink-0 text-[16px]" style={{ color: 'var(--color-tertiary-ink)' }} />
-          </span>
-        </div>
-
-        <div
-          className="mt-3 flex flex-col gap-2.5 rounded-2xl p-3 sm:flex-row sm:items-center sm:justify-between"
-          style={{ backgroundColor: 'var(--color-tertiary-fixed)' }}
-        >
-          <p className="text-[12.5px] font-bold" style={{ color: 'var(--color-tertiary-container)' }}>
-            {USAGE.askUsed} of {USAGE.askTotal} free questions used {USAGE.periodLabel}.
-          </p>
-          <CtaButton location="ask-ai-inline" size="sm" variant="dark" className="shrink-0">
-            Unlock Ask AI
-          </CtaButton>
-        </div>
+        <CtaButton location="ask-ai-inline" size="sm" className="shrink-0">
+          Unlock Ask AI
+        </CtaButton>
       </div>
     </div>
   )

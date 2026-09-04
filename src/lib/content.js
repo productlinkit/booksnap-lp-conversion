@@ -103,9 +103,6 @@ export const ASK_AI_BENEFITS = [
   },
 ]
 
-/** The question the free plan will not answer — the moment the page is about. */
-export const ASK_AI_BLOCKED = 'So how do I design my morning around that?'
-
 /**
  * All six reviews as published on booksnap.ai, unedited. None has been
  * rewritten to mention Premium: putting words about a paid plan into a named

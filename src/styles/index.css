@@ -238,21 +238,6 @@ button:focus-visible,
   transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.5s ease;
 }
 
-/* ---------- The blocked question's cursor ---------- */
-.caret {
-  display: inline-block;
-  width: 1.5px;
-  height: 1em;
-  margin-left: 1px;
-  vertical-align: -0.12em;
-  background: currentColor;
-  animation: caret-blink 1.1s step-end infinite;
-}
-@keyframes caret-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
 /* ---------- Reading progress ----------
    A hairline under the nav pill that fills as the page is consumed. The page
    is about momentum; this is the one ornament that actually says so. */
