@@ -34,7 +34,7 @@ src/
 ├── lib/
 │   ├── config.js           ⚠️ pricing, usage counters, CTA labels, URLs
 │   ├── content.js          comparison rows, benefits, reviews, trust items
-│   ├── covers.js           real catalogue covers, used by the hero marquee
+│   ├── covers.js           catalogue covers (local copies + source URLs)
 │   └── hooks.js            useReveal, useScrolled, useInView, media queries
 ├── styles/index.css        design tokens + shared motion/type classes
 ├── App.jsx
@@ -52,6 +52,11 @@ public/
 │                           suggestions offered, send button live. The hero
 │                           shows them side by side (limit drained and
 │                           padlocked); Ask AI shows screen-limit in colour.
+├── covers/                 nine catalogue covers, 420px-tall JPEGs, 152KB for
+│                           the set. The API serves them at print resolution —
+│                           7.1MB for the nine, against a 104px tile — so they
+│                           are no longer loaded live. `source` in covers.js
+│                           keeps each original URL for refreshing.
 ├── flower-1.png            the site's cut-paper ornaments, re-cut to RGBA:
 └── flower-2.png            the originals ship an opaque ground that would
                             render as a pale rectangle on the dark panels.
@@ -85,7 +90,8 @@ build, with the site's own durations and easings:
 | `.glass-card` | the frosted stat chip (opacity raised to 0.86 — these sit over photographic screenshots, not flat colour) |
 | `.shell` | the `28px → 48px` rounded panel every section sits inside |
 | `.phone` | device bezel + notch around a screen capture; `.phone-locked` drains it and drops the scrim |
-| `.marquee` | the seamless cover strip (two halves, `-50%`, paused on hover) |
+| `.marquee` | the seamless cover strip (two halves, `-50% - gap/2`, paused on hover). Each half must be **wider than the container** or the loop runs out of covers and the strip appears to end — nine covers were 804px against a 1440px container, hence six sets |
+| `.converge` | per-item arrival from its own direction, via `--cx` / `--cy` |
 | `.cta-sheen` | one slow pass of light, reserved for the primary CTA |
 | `.fade-up` / `.fade-left` / `.fade-right` / `.fade-scale` / `.fade-row` + `.stagger-*` | the scroll reveals — two-column sections arrive from their own edges, table rows cascade |
 | `.hover-rise`, `.cover-hover` | pointer response on review cards and catalogue covers |

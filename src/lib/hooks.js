@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 /** Every reveal variant. One observer drives all of them. */
-const REVEAL = '.fade-up, .fade-left, .fade-right, .fade-scale, .fade-row'
+const REVEAL = '.fade-up, .fade-left, .fade-right, .fade-scale, .fade-row, .converge'
 
 /** Adds `.visible` to every reveal descendant once it scrolls into view. */
 export function useReveal() {

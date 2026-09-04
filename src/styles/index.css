@@ -195,6 +195,27 @@ button:focus-visible,
   transform: none;
 }
 
+/* ---------- Converge ----------
+   Each element starts offset in its own direction and settles into place, so a
+   group arrives from every side at once rather than rising in unison. The
+   offsets come from `--cx` / `--cy` set per item; the resting state is simply
+   no transform, which is what makes them meet.
+
+   Kept off `rotate`, which these cards also use: `rotate` is its own property,
+   so a card can hold its tilt while `transform` does the travelling. */
+.js-reveal .converge {
+  opacity: 0;
+  transform: translate3d(var(--cx, 0px), var(--cy, 0px), 0) scale(0.9);
+}
+.converge {
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.converge.visible {
+  opacity: 1;
+  transform: none;
+}
+
 /* Table rows cascade down the comparison instead of appearing as one block. */
 .js-reveal .fade-row {
   opacity: 0;
@@ -274,7 +295,8 @@ button:focus-visible,
   .fade-left,
   .fade-right,
   .fade-scale,
-  .fade-row { opacity: 1; transform: none; }
+  .fade-row,
+  .converge { opacity: 1; transform: none; }
   .rl > span { transform: none; }
   .hover-rise:hover,
   .cover-hover:hover { transform: none; }
@@ -413,7 +435,7 @@ button:focus-visible,
   display: flex;
   width: max-content;
   gap: 16px;
-  animation: marquee-scroll 46s linear infinite;
+  animation: marquee-scroll 32s linear infinite;
 }
 .marquee:hover .marquee-track { animation-play-state: paused; }
 @keyframes marquee-scroll {

@@ -5,15 +5,34 @@ import { Blob, Icon, SectionHead, Stars } from './primitives'
 /**
  * Proof, then the objections that stop a warm user at checkout.
  *
- * The reviews are laid out in CSS columns rather than a grid: quotes are
- * different lengths, and a masonry flow packs them without leaving the ragged
- * bottom edge a fixed grid would. Each card carries the slight rotation the
- * site gives its own review cards, so the block reads as a pinned board.
+ * The reviews sit in a plain grid. They were in CSS columns for masonry
+ * packing, but a column flow re-balances while the cards are still animating
+ * in, so cards jumped between columns as they appeared and the block looked
+ * like it was assembling itself at random. A fixed grid places every card
+ * before anything moves. The quotes run 202–230px, close enough that the
+ * ragged bottom edge masonry was solving is barely visible.
+ *
+ * Each card then converges from its own direction into that fixed slot, and
+ * keeps the slight rotation the site gives its own review cards.
  *
  * The review quoted up in the pricing panel is dropped here — the same words
  * twice on one page reads as thin proof, not more of it.
  */
 const REVIEWS = TESTIMONIALS.filter((_, i) => i !== PRICING_QUOTE_INDEX)
+
+/**
+ * Where each card starts, by grid position: the outer columns come in from
+ * their own side, the middle from above and below, and they meet in the grid.
+ * Modest distances — a card that flies half the viewport reads as a slideshow
+ * rather than an arrival.
+ */
+const FROM = [
+  { cx: '-48px', cy: '-36px' },
+  { cx: '0px', cy: '-64px' },
+  { cx: '48px', cy: '-36px' },
+  { cx: '-52px', cy: '44px' },
+  { cx: '52px', cy: '44px' },
+]
 
 export default function Testimonial() {
   return (
@@ -30,16 +49,19 @@ export default function Testimonial() {
           />
         </div>
 
-        <div className="mt-10 columns-1 gap-4 sm:columns-2 sm:gap-5 lg:columns-3">
+        <div className="mt-10 grid grid-cols-1 items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {REVIEWS.map((review, i) => (
             <figure
               key={review.name}
-              className={`hover-rise fade-scale mb-4 break-inside-avoid rounded-[24px] p-5 sm:mb-5 sm:p-6 stagger-${Math.min(i + 1, 5)}`}
+              className="hover-rise converge m-0 rounded-[24px] p-5 sm:p-6"
               style={{
                 backgroundColor: 'var(--color-surface-lowest)',
                 border: '1px solid rgba(0,54,37,0.06)',
                 boxShadow: '0 14px 40px rgba(0,54,37,0.08)',
                 rotate: review.tilt,
+                '--cx': FROM[i % FROM.length].cx,
+                '--cy': FROM[i % FROM.length].cy,
+                transitionDelay: `${i * 0.06}s`,
               }}
             >
               <Stars className="mb-3" color="var(--color-tertiary-ink)" />

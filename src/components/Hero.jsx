@@ -5,6 +5,15 @@ import { Blob, CtaButton, Icon, Stars } from './primitives'
 import LibraryPreview from './LibraryPreview'
 
 /**
+ * The marquee needs each half to be at least as wide as its container, or the
+ * loop shifts to a point where there is nothing left to fill the viewport and
+ * the strip appears to end. Nine covers run ~804px against a 1440px container;
+ * six sets give each half ~2.4k, which covers any desktop this page will meet.
+ * Same nine URLs, so the extra tiles cost one cache hit each.
+ */
+const MARQUEE = Array.from({ length: 6 }, () => LIBRARY).flat()
+
+/**
  * The drifting icons booksnap.ai scatters behind its hero. Decorative only.
  *
  * All of them sit outside the copy column's footprint. A fourth used to float
@@ -160,7 +169,7 @@ export default function Hero() {
           </p>
           <div className="marquee">
             <div className="marquee-track" aria-hidden="true">
-              {[...LIBRARY, ...LIBRARY].map((book, i) => (
+              {MARQUEE.map((book, i) => (
                 <img
                   key={`${book.title}-${i}`}
                   src={book.cover}
