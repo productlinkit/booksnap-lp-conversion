@@ -1,5 +1,6 @@
 import { CTA, USAGE, RATING, FACTS } from '../lib/config'
 import { LIBRARY } from '../lib/covers'
+import { useCountUp } from '../lib/hooks'
 import { Blob, CtaButton, Icon, Stars } from './primitives'
 import LibraryPreview from './LibraryPreview'
 
@@ -11,14 +12,52 @@ const DRIFT = [
   { name: 'headphones', className: 'right-[4%] bottom-[18%] animate-float-2 text-[32px] md:text-[48px]', opacity: 0.18 },
 ]
 
+/**
+ * The proof line. Both figures count up when the row is reached — a number
+ * that lands is read; a number that is simply there is skimmed past.
+ * `FACTS.summaries` is a string like "500+", so the suffix is kept aside and
+ * only the digits are animated.
+ */
+function ProofRow() {
+  const summaries = parseInt(FACTS.summaries, 10)
+  const suffix = FACTS.summaries.replace(/[0-9]/g, '')
+  const [scoreRef, score] = useCountUp(RATING.score, { decimals: 1 })
+  const [booksRef, books] = useCountUp(summaries)
+
+  return (
+    <div
+      className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t pt-6 text-[13px]"
+      style={{ borderColor: 'rgba(0,54,37,0.10)', color: 'var(--color-on-surface-variant)' }}
+    >
+      <span ref={scoreRef} className="flex items-center gap-2">
+        <Stars />
+        <span>
+          <strong className="tabular-nums" style={{ color: 'var(--color-primary)' }}>
+            {score}
+          </strong>{' '}
+          from {RATING.count} readers
+        </span>
+      </span>
+      <span ref={booksRef} className="flex items-center gap-1.5">
+        <Icon name="menu_book" className="text-[16px]" style={{ color: 'var(--color-primary-container)' }} />
+        <strong className="tabular-nums" style={{ color: 'var(--color-primary)' }}>
+          {books}
+          {suffix}
+        </strong>{' '}
+        summaries
+      </span>
+    </div>
+  )
+}
+
 export default function Hero() {
   return (
     <section id="top" className="relative overflow-hidden pb-10 pt-28 sm:pt-32 lg:pb-16 lg:pt-36">
       {/* One soft wash behind the fold, plus the site's drifting glyphs. */}
       <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-[680px]">
-        <Blob className="left-[8%] top-[-60px] h-72 w-72" color="var(--color-secondary-container)" opacity={0.5} />
-        <Blob className="right-[6%] top-[40px] h-80 w-80" color="var(--color-tertiary-fixed)" opacity={0.42} />
-        <Blob className="left-[38%] top-[280px] h-64 w-64" color="var(--color-primary-fixed)" opacity={0.35} />
+        <Blob className="left-[8%] top-[-60px] h-72 w-72" color="var(--color-secondary-container)" opacity={0.5} data-parallax="0.10" />
+        <Blob className="right-[6%] top-[40px] h-80 w-80" color="var(--color-tertiary-fixed)" opacity={0.42} data-parallax="0.17" />
+        <Blob className="left-[38%] top-[280px] h-64 w-64" color="var(--color-primary-fixed)" opacity={0.35} data-parallax="0.06" />
         {DRIFT.map((d) => (
           <Icon
             key={d.name}
@@ -30,7 +69,7 @@ export default function Hero() {
       </div>
 
       <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 sm:px-8 md:px-12 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:gap-14 xl:gap-20">
-        <div className="fade-up flex flex-col items-start">
+        <div className="fade-left flex flex-col items-start">
           {/* The reader's own counter, stated before anything is sold. */}
           <p
             className="cta-sheen inline-flex max-w-full items-center gap-2 rounded-full px-4 py-2 text-[12.5px] font-bold sm:text-[13px]"
@@ -83,53 +122,44 @@ export default function Hero() {
             {CTA.reassurance}
           </p>
 
-          {RATING && (
-            <div
-              className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 border-t pt-6 text-[13px]"
-              style={{ borderColor: 'rgba(0,54,37,0.10)', color: 'var(--color-on-surface-variant)' }}
-            >
-              <span className="flex items-center gap-2">
-                <Stars />
-                <span>
-                  <strong style={{ color: 'var(--color-primary)' }}>{RATING.score}</strong> from{' '}
-                  {RATING.count} readers
-                </span>
-              </span>
-              <span className="flex items-center gap-1.5">
-                <Icon name="menu_book" className="text-[16px]" style={{ color: 'var(--color-primary-container)' }} />
-                <strong style={{ color: 'var(--color-primary)' }}>{FACTS.summaries}</strong> summaries
-              </span>
-            </div>
-          )}
+          {RATING && <ProofRow />}
         </div>
 
-        <div className="fade-up stagger-2 w-full">
-          <LibraryPreview />
+        <div className="fade-right stagger-2 w-full">
+          {/* An inner wrapper for the parallax transform: putting it on the
+              reveal element itself would fight the reveal's own transform. */}
+          <div data-parallax="-0.045">
+            <LibraryPreview />
+          </div>
         </div>
       </div>
 
       {/* The catalogue sliding past, as the thing the limit is holding shut.
           Covers are the real ones from the BookSnap API. */}
+      {/* Reveal and parallax must not share an element — both write `transform`,
+          and the scroll loop would overwrite the reveal's rise. */}
       <div className="fade-up stagger-3 relative mt-14 lg:mt-20">
-        <p
-          className="mb-4 text-center text-[11px] font-bold uppercase tracking-[0.12em]"
-          style={{ color: 'var(--color-on-surface-variant)' }}
-        >
-          {FACTS.summaries} snaps · {FACTS.categories} categories · waiting behind your limit
-        </p>
-        <div className="marquee">
-          <div className="marquee-track" aria-hidden="true">
-            {[...LIBRARY, ...LIBRARY].map((book, i) => (
-              <img
-                key={`${book.title}-${i}`}
-                src={book.cover}
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="h-[104px] w-auto shrink-0 rounded-xl object-cover sm:h-[132px]"
-                style={{ boxShadow: '0 8px 24px rgba(0,54,37,0.12)' }}
-              />
-            ))}
+        <div data-parallax="-0.03">
+          <p
+            className="mb-4 text-center text-[11px] font-bold uppercase tracking-[0.12em]"
+            style={{ color: 'var(--color-on-surface-variant)' }}
+          >
+            {FACTS.summaries} snaps · {FACTS.categories} categories · waiting behind your limit
+          </p>
+          <div className="marquee">
+            <div className="marquee-track" aria-hidden="true">
+              {[...LIBRARY, ...LIBRARY].map((book, i) => (
+                <img
+                  key={`${book.title}-${i}`}
+                  src={book.cover}
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="cover-hover h-[104px] w-auto shrink-0 rounded-xl object-cover sm:h-[132px]"
+                  style={{ boxShadow: '0 8px 24px rgba(0,54,37,0.12)' }}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

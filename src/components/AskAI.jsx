@@ -60,8 +60,8 @@ function Chip({ className, icon, label, value, tone }) {
 function AskAiVisual() {
   return (
     <div className="relative mx-auto w-full max-w-[420px] px-6 sm:px-10 lg:px-12">
-      <Blob className="left-0 top-8 h-56 w-56" color="var(--color-secondary-container)" opacity={0.55} />
-      <Blob className="bottom-4 right-0 h-52 w-52" color="var(--color-tertiary-fixed)" opacity={0.45} />
+      <Blob className="left-0 top-8 h-56 w-56" color="var(--color-secondary-container)" opacity={0.55} data-parallax="0.13" />
+      <Blob className="bottom-4 right-0 h-52 w-52" color="var(--color-tertiary-fixed)" opacity={0.45} data-parallax="0.19" />
 
       {/* Chips are anchored to the frame, not to the whole block — percentages
           measured against the block would drop them behind the card below. */}
@@ -138,7 +138,7 @@ export default function AskAI() {
   return (
     <section id="ask-ai" className="relative scroll-mt-28 overflow-hidden py-14 sm:py-20 lg:py-24">
       <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-4 sm:px-8 md:px-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)] lg:gap-16">
-        <div className="fade-up flex flex-col items-start">
+        <div className="fade-left flex flex-col items-start">
           <SectionLabel tone="var(--color-primary-fixed)">Ask AI</SectionLabel>
 
           <h2 className="rsp-section-h2 mt-4 font-extrabold" style={{ color: 'var(--color-primary)' }}>
@@ -186,8 +186,10 @@ export default function AskAI() {
           </CtaButton>
         </div>
 
-        <div className="fade-up stagger-2 w-full">
-          <AskAiVisual />
+        <div className="fade-right stagger-2 w-full">
+          <div data-parallax="-0.04">
+            <AskAiVisual />
+          </div>
         </div>
       </div>
     </section>

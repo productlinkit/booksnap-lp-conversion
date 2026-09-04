@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { NAV_LINKS } from '../lib/content'
 import { CTA } from '../lib/config'
-import { useScrolled } from '../lib/hooks'
+import { useScrolled, useScrollProgress } from '../lib/hooks'
 import { CtaButton, Icon } from './primitives'
 
 /**
@@ -11,13 +11,14 @@ import { CtaButton, Icon } from './primitives'
  */
 export default function Navbar() {
   const scrolled = useScrolled(24)
+  const progress = useScrollProgress()
   const [open, setOpen] = useState(false)
 
   return (
     <header className="fixed left-0 top-0 z-50 w-full transition-all duration-500">
       <nav
         aria-label="Primary"
-        className="mx-3 mt-3 flex items-center justify-between gap-3 rounded-full px-3 py-2 transition-all duration-500 sm:mx-auto sm:w-fit sm:gap-8 sm:px-4 md:mt-4 md:gap-12 md:py-2.5 md:pl-5 md:pr-2.5"
+        className="relative mx-3 mt-3 flex items-center justify-between gap-3 overflow-hidden rounded-full px-3 py-2 transition-all duration-500 sm:mx-auto sm:w-fit sm:gap-8 sm:px-4 md:mt-4 md:gap-12 md:py-2.5 md:pl-5 md:pr-2.5"
         style={{
           backgroundColor: scrolled ? 'rgba(255,255,255,0.86)' : 'rgba(255,255,255,0.62)',
           WebkitBackdropFilter: 'blur(14px)',
@@ -50,6 +51,22 @@ export default function Navbar() {
             </a>
           ))}
         </div>
+
+        {/* The page argues about momentum; this is the one ornament that shows
+            it. Sits inside the pill, under the content, clipped by its radius. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[3px] overflow-hidden rounded-b-full"
+        >
+          <span
+            className="nav-progress block h-full w-full rounded-full"
+            style={{
+              transform: `scaleX(${progress})`,
+              background:
+                'linear-gradient(90deg, var(--color-secondary-container), var(--color-tertiary-fixed))',
+            }}
+          />
+        </span>
 
         <div className="flex shrink-0 items-center gap-2">
           {/* Never leaves the screen: this is warm traffic one tap from paying. */}

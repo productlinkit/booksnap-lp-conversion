@@ -18,8 +18,8 @@ const REVIEWS = TESTIMONIALS.filter((_, i) => i !== PRICING_QUOTE_INDEX)
 export default function Testimonial() {
   return (
     <section id="reviews" className="relative scroll-mt-28 overflow-hidden py-14 sm:py-20 lg:py-24">
-      <Blob className="-left-20 top-16 h-72 w-72" color="var(--color-primary-fixed)" opacity={0.3} />
-      <Blob className="-right-20 bottom-20 h-72 w-72" color="var(--color-secondary-container)" opacity={0.28} />
+      <Blob className="-left-20 top-16 h-72 w-72" color="var(--color-primary-fixed)" opacity={0.3} data-parallax="0.15" />
+      <Blob className="-right-20 bottom-20 h-72 w-72" color="var(--color-secondary-container)" opacity={0.28} data-parallax="0.21" />
 
       <div className="relative mx-auto max-w-6xl px-4 sm:px-8 md:px-12">
         <div className="fade-up flex justify-center">
@@ -34,7 +34,7 @@ export default function Testimonial() {
           {REVIEWS.map((review, i) => (
             <figure
               key={review.name}
-              className={`lift-card fade-up mb-4 break-inside-avoid rounded-[24px] p-5 sm:mb-5 sm:p-6 stagger-${Math.min(i + 1, 5)}`}
+              className={`hover-rise fade-scale mb-4 break-inside-avoid rounded-[24px] p-5 sm:mb-5 sm:p-6 stagger-${Math.min(i + 1, 5)}`}
               style={{
                 backgroundColor: 'var(--color-surface-lowest)',
                 border: '1px solid rgba(0,54,37,0.06)',

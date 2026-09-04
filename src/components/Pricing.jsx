@@ -26,8 +26,8 @@ export default function Pricing() {
         className="shell relative mx-auto max-w-[1150px] px-4 py-14 sm:px-8 md:py-20 lg:px-12"
         style={{ backgroundColor: 'var(--color-primary)', boxShadow: '0 30px 80px rgba(0,54,37,0.28)' }}
       >
-        <Flower src="/flower-1.png" className="-left-16 -top-16 w-48 md:w-72" opacity={0.14} />
-        <Flower src="/flower-2.png" className="-bottom-20 -right-16 w-52 md:w-80" opacity={0.14} />
+        <Flower src="/flower-1.png" className="-left-16 -top-16 w-48 md:w-72" opacity={0.14} data-parallax="0.13" />
+        <Flower src="/flower-2.png" className="-bottom-20 -right-16 w-52 md:w-80" opacity={0.14} data-parallax="-0.13" />
         <Blob className="left-[10%] top-6 h-64 w-64" color="var(--color-secondary-container)" opacity={0.16} />
         <Blob className="bottom-6 right-[8%] h-64 w-64" color="var(--color-tertiary-fixed)" opacity={0.14} />
 
@@ -51,7 +51,7 @@ export default function Pricing() {
             {/* ---------- Monthly: deliberately the quieter card ---------- */}
             <div
               onClick={() => setPlan('monthly')}
-              className="order-2 cursor-pointer rounded-[28px] p-6 transition-all duration-300 sm:p-7 lg:order-1 lg:mt-6"
+              className="fade-left stagger-1 order-2 cursor-pointer rounded-[28px] p-6 transition-all duration-300 sm:p-7 lg:order-1 lg:mt-6"
               style={{
                 backgroundColor: 'rgba(255,255,255,0.07)',
                 border: `1.5px solid ${plan === 'monthly' ? 'var(--color-tertiary-fixed)' : 'rgba(255,255,255,0.16)'}`,
@@ -106,7 +106,7 @@ export default function Pricing() {
             {/* ---------- Annual: the recommended plan ---------- */}
             <div
               onClick={() => setPlan('annual')}
-              className="order-1 cursor-pointer rounded-[28px] p-6 transition-all duration-300 sm:p-8 lg:order-2"
+              className="fade-right stagger-2 order-1 cursor-pointer rounded-[28px] p-6 transition-all duration-300 sm:p-8 lg:order-2"
               style={{
                 backgroundColor: 'var(--color-surface-lowest)',
                 border: `2px solid ${plan === 'annual' ? 'var(--color-tertiary-fixed)' : 'transparent'}`,

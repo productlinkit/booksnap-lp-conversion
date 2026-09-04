@@ -6,7 +6,7 @@ import AskAI from './components/AskAI'
 import Testimonial from './components/Testimonial'
 import FinalCTA from './components/FinalCTA'
 import Footer from './components/Footer'
-import { useReveal } from './lib/hooks'
+import { useReveal, useParallax } from './lib/hooks'
 
 /**
  * LP 2 — Free → Premium conversion, for warm traffic only.
@@ -18,6 +18,8 @@ import { useReveal } from './lib/hooks'
  */
 export default function App() {
   const ref = useReveal()
+  // One scroll loop drives every `data-parallax` layer on the page.
+  useParallax()
 
   return (
     <div ref={ref} className="w-full max-w-full overflow-x-clip antialiased">

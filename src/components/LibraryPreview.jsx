@@ -1,4 +1,5 @@
 import { USAGE } from '../lib/config'
+import { useInView } from '../lib/hooks'
 import { Blob, Icon, Phone } from './primitives'
 
 /**
@@ -29,10 +30,18 @@ function PlanTag({ premium }) {
   )
 }
 
-/** The usage meter that sits under each phone — full on Free, open on Premium. */
+/**
+ * The usage meter under each phone — full on Free, open on Premium.
+ *
+ * The bar fills from empty when it is reached rather than arriving already
+ * full: watching the free plan's allowance run out to the end of the track is
+ * the argument, and a static bar does not make it.
+ */
 function Meter({ premium }) {
+  const [ref, inView] = useInView(0.6)
+
   return (
-    <div className="mt-3 w-full">
+    <div ref={ref} className="mt-3 w-full">
       <div className="flex items-baseline justify-between gap-2 text-[11px] font-semibold sm:text-[12px]">
         <span style={{ color: 'var(--color-on-surface-variant)' }}>Snaps</span>
         <span
@@ -47,9 +56,10 @@ function Meter({ premium }) {
         style={{ backgroundColor: 'var(--color-surface-container)' }}
       >
         <div
-          className={`meter-fill h-full rounded-full ${premium ? '' : 'meter-full'}`}
+          className={`meter-fill h-full rounded-full ${premium || !inView ? '' : 'meter-full'}`}
           style={{
-            width: '100%',
+            width: inView ? '100%' : '0%',
+            transitionDelay: premium ? '0.25s' : '0s',
             backgroundColor: premium ? 'var(--color-primary)' : 'var(--color-tertiary-fixed)',
           }}
         />

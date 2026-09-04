@@ -162,8 +162,11 @@ button:focus-visible,
   letter-spacing: -0.03em;
 }
 
-/* ---------- Scroll reveal ---------- */
-.fade-up {
+/* ---------- Scroll reveal ----------
+   Every hidden state is scoped to `.js-reveal`, which main.jsx adds only when
+   the bundle runs and the browser can observe intersections. Without it the
+   page renders fully visible rather than blank. */
+.js-reveal .fade-up {
   opacity: 0;
   transform: translateY(22px);
   transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
@@ -173,11 +176,40 @@ button:focus-visible,
   opacity: 1;
   transform: none;
 }
+/* Directional variants of the same reveal. Two-column sections read better
+   when each side arrives from its own edge instead of both rising together. */
+.js-reveal .fade-left,
+.js-reveal .fade-right,
+.js-reveal .fade-scale {
+  opacity: 0;
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.js-reveal .fade-left { transform: translateX(-26px); }
+.js-reveal .fade-right { transform: translateX(26px); }
+.js-reveal .fade-scale { transform: scale(0.94); }
+.fade-left.visible,
+.fade-right.visible,
+.fade-scale.visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Table rows cascade down the comparison instead of appearing as one block. */
+.js-reveal .fade-row {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.fade-row.visible { opacity: 1; transform: none; }
+
 .stagger-1 { transition-delay: 0.08s; }
 .stagger-2 { transition-delay: 0.16s; }
 .stagger-3 { transition-delay: 0.24s; }
 .stagger-4 { transition-delay: 0.32s; }
 .stagger-5 { transition-delay: 0.40s; }
+.stagger-6 { transition-delay: 0.48s; }
+.stagger-7 { transition-delay: 0.56s; }
 
 /* ---------- Headline line reveal ----------
    Each line sits in its own overflow-hidden box and slides up from under the
@@ -188,8 +220,12 @@ button:focus-visible,
   /* Room under the mask for a descender ("Plan.") at the tight hero leading. */
   padding-bottom: 0.14em;
 }
+/* `display: block` is unguarded: without it the two headline lines collapse
+   onto one line when the bundle has not run. Only the hiding is guarded. */
 .rl > span {
   display: block;
+}
+.js-reveal .rl > span {
   transform: translateY(110%);
   transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -216,6 +252,31 @@ button:focus-visible,
   50% { opacity: 0; }
 }
 
+/* ---------- Reading progress ----------
+   A hairline under the nav pill that fills as the page is consumed. The page
+   is about momentum; this is the one ornament that actually says so. */
+.nav-progress {
+  transform-origin: left center;
+  transition: transform 0.12s linear;
+}
+
+/* ---------- Pointer response ----------
+   Cards and frames answer the cursor, so nothing on the page feels inert. */
+.hover-rise {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+}
+.hover-rise:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 28px 64px rgba(0, 54, 37, 0.18);
+}
+.cover-hover {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.4s ease;
+}
+.cover-hover:hover {
+  transform: translateY(-8px) scale(1.04);
+  box-shadow: 0 18px 40px rgba(0, 54, 37, 0.24);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -223,8 +284,14 @@ button:focus-visible,
     transition-duration: 0.01ms !important;
   }
   html { scroll-behavior: auto; }
-  .fade-up { opacity: 1; transform: none; }
+  .fade-up,
+  .fade-left,
+  .fade-right,
+  .fade-scale,
+  .fade-row { opacity: 1; transform: none; }
   .rl > span { transform: none; }
+  .hover-rise:hover,
+  .cover-hover:hover { transform: none; }
 }
 
 /* ============================================================

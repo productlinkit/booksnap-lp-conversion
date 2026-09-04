@@ -130,10 +130,19 @@ export function Phone({ src, alt, locked = false, className = '', style, childre
   )
 }
 
-/** A soft colour wash. Purely decorative, never in the accessibility tree. */
-export function Blob({ className = '', color, opacity = 0.4 }) {
+/**
+ * A soft colour wash. Purely decorative, never in the accessibility tree.
+ * Extra props pass through so a blob can opt into the parallax loop with
+ * `data-parallax`.
+ */
+export function Blob({ className = '', color, opacity = 0.4, ...rest }) {
   return (
-    <span aria-hidden="true" className={`blob ${className}`} style={{ backgroundColor: color, opacity }} />
+    <span
+      aria-hidden="true"
+      className={`blob ${className}`}
+      style={{ backgroundColor: color, opacity }}
+      {...rest}
+    />
   )
 }
 
@@ -141,7 +150,7 @@ export function Blob({ className = '', color, opacity = 0.4 }) {
  * The cut-paper flowers booksnap.ai parks in the corners of its dark panels.
  * Hidden below `sm` — at phone width they eat the padding the copy needs.
  */
-export function Flower({ src, className = '', opacity = 0.5 }) {
+export function Flower({ src, className = '', opacity = 0.5, ...rest }) {
   return (
     <img
       src={src}
@@ -150,6 +159,7 @@ export function Flower({ src, className = '', opacity = 0.5 }) {
       loading="lazy"
       className={`pointer-events-none absolute hidden select-none sm:block ${className}`}
       style={{ opacity }}
+      {...rest}
     />
   )
 }

@@ -85,9 +85,27 @@ build, with the site's own durations and easings:
 | `.phone` | device bezel + notch around a screen capture; `.phone-locked` drains it and drops the scrim |
 | `.marquee` | the seamless cover strip (two halves, `-50%`, paused on hover) |
 | `.cta-sheen` | one slow pass of light, reserved for the primary CTA |
-| `.fade-up` + `.stagger-*` | the scroll reveal |
+| `.fade-up` / `.fade-left` / `.fade-right` / `.fade-scale` / `.fade-row` + `.stagger-*` | the scroll reveals — two-column sections arrive from their own edges, table rows cascade |
+| `.hover-rise`, `.cover-hover` | pointer response on review cards and catalogue covers |
+| `.nav-progress` | the reading-progress hairline inside the nav pill |
+
+Scroll-linked motion lives in `lib/hooks.js`:
+
+- `useParallax()` — one rAF-throttled scroll loop for the whole page. Layers
+  opt in with `data-parallax="<factor>"`; positive trails the scroll, negative
+  leads it. Skipped below `md` and under reduced motion.
+- `useScrollProgress()` — drives the nav hairline.
+- `useCountUp()` — the proof figures ramp in when their row is reached.
 
 Everything above is switched off under `prefers-reduced-motion`.
+
+⚠️ Reveal and parallax must never share an element: both write `transform`, and
+the scroll loop would overwrite the reveal's own offset. Wrap one inside the
+other, as the hero marquee and the two mockup columns do.
+
+The `.fade-*` hidden states are scoped to `.js-reveal`, a class `main.jsx` adds
+only when `IntersectionObserver` exists. A browser without it renders the page
+fully visible instead of leaving everything below the fold blank.
 
 ⚠️ `.phone` sets `position: relative` from plain (unlayered) CSS, which outranks
 Tailwind's `absolute` utility. To place a `<Phone>` absolutely — as the final
@@ -123,7 +141,15 @@ annual plan is ordered first on phones while staying on the right at desktop;
 the floating chips, background glyphs and the final CTA's phones are all
 `sm`/`md`-and-up only, because at phone width they would cover the copy.
 
-Note when checking this yourself: headless Chrome clamps its viewport to a
-minimum of 500px, so `--window-size=390` silently renders at 500 and crops.
-Render the page inside a fixed-width `<iframe>` to measure narrow layouts, and
-serve the harness from the same origin or `contentDocument` is blocked.
+Two things to know before you try to verify this with headless Chrome:
+
+1. It clamps its viewport to a minimum of 500px, so `--window-size=390`
+   silently renders at 500 and crops. Render the page inside a fixed-width
+   `<iframe>` to measure narrow layouts, and serve the harness from the same
+   origin or `contentDocument` is blocked.
+2. Under `--virtual-time-budget` it does not run the rendering loop at all. A
+   control page with nothing but a scroll listener, an IntersectionObserver and
+   a `requestAnimationFrame` loop reports `scrollEvents=0 ioHits=0 rafTicks=1`
+   after a programmatic scroll. **Scroll-triggered behaviour — the reveals, the
+   parallax, the progress hairline, the count-ups — cannot be verified there.**
+   Only the mount-time state can. Check the motion in a real browser.

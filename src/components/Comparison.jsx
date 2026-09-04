@@ -45,8 +45,8 @@ function PremiumMark({ value }) {
 export default function Comparison() {
   return (
     <section id="compare" className="relative scroll-mt-28 overflow-hidden py-14 sm:py-20 lg:py-24">
-      <Blob className="-left-24 top-24 h-72 w-72" color="var(--color-secondary-container)" opacity={0.34} />
-      <Blob className="-right-24 bottom-10 h-72 w-72" color="var(--color-tertiary-fixed)" opacity={0.3} />
+      <Blob className="-left-24 top-24 h-72 w-72" color="var(--color-secondary-container)" opacity={0.34} data-parallax="0.14" />
+      <Blob className="-right-24 bottom-10 h-72 w-72" color="var(--color-tertiary-fixed)" opacity={0.3} data-parallax="0.20" />
 
       <div className="relative mx-auto max-w-6xl px-3 sm:px-8 md:px-12">
         <div className="fade-up flex justify-center">
@@ -60,7 +60,7 @@ export default function Comparison() {
         {/* The whole comparison lives on one raised card, the way every panel
             on booksnap.ai does — inset from the viewport, heavily rounded. */}
         <div
-          className="fade-up stagger-1 shell mt-10 p-4 sm:p-6 md:mt-12 md:p-8"
+          className="fade-scale stagger-1 shell mt-10 p-4 sm:p-6 md:mt-12 md:p-8"
           style={{
             backgroundColor: 'var(--color-surface-lowest)',
             boxShadow: '0 24px 60px rgba(0,54,37,0.10)',
@@ -121,8 +121,17 @@ export default function Comparison() {
                 </tr>
               </thead>
               <tbody>
-                {COMPARISON.map((row) => (
-                  <tr key={row.feature} style={{ borderTop: '1px solid rgba(0,54,37,0.09)' }}>
+                {COMPARISON.map((row, i) => (
+                  // Rows arrive one after another, so the eye runs down the
+                  // Premium column instead of meeting the whole grid at once.
+                  <tr
+                    key={row.feature}
+                    className="fade-row"
+                    style={{
+                      borderTop: '1px solid rgba(0,54,37,0.09)',
+                      transitionDelay: `${i * 0.07}s`,
+                    }}
+                  >
                     <th scope="row" className="py-4 pr-4 align-top font-normal">
                       <span className="flex items-start gap-3">
                         <span
