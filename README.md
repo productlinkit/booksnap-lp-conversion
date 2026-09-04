@@ -22,7 +22,7 @@ src/
 ├── components/
 │   ├── Navbar.jsx          fixed nav, "Free plan" chip, Go Premium CTA
 │   ├── Hero.jsx            usage counter → headline → CTA → cover marquee
-│   ├── LibraryPreview.jsx  the locked ⇄ unlocked phone pair in the hero
+│   ├── LibraryPreview.jsx  the blocked ⇄ running phone pair in the hero
 │   ├── Comparison.jsx      Free vs Premium (table ≥ md, stacked cards below)
 │   ├── Pricing.jsx         monthly vs annual, annual recommended
 │   ├── AskAI.jsx           Ask AI deep dive + the real Ask AI screen
@@ -45,14 +45,13 @@ Static art lives in `public/`:
 
 ```
 public/
-├── app/                    production BookSnap captures — the page's mockups
-│   ├── screen-book.png     are the real app, not drawings of it. 750×1624
-│   └── screen-limit.png    and 739×1600, near-identical aspect ratios, so
-│                           they pair without distortion. screen-limit is the
-│                           Ask AI paywall itself: a real exchange, the counter
-│                           in red at 10/10, and the "Free limit reached"
-│                           banner. It appears twice — drained and padlocked as
-│                           the hero's free plan, in full colour in Ask AI.
+├── app/                    production BookSnap captures, both 739×1600 — the
+│   ├── screen-limit.png    same Ask AI screen in its two states. screen-limit
+│   └── screen-chat.png     is blocked: counter red at 10/10, "Free limit
+│                           reached", composer dead. screen-chat is running:
+│                           suggestions offered, send button live. The hero
+│                           shows them side by side (limit drained and
+│                           padlocked); Ask AI shows screen-limit in colour.
 ├── flower-1.png            the site's cut-paper ornaments, re-cut to RGBA:
 └── flower-2.png            the originals ship an opaque ground that would
                             render as a pale rectangle on the dark panels.
@@ -134,8 +133,15 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    ⚠️ Do not source new screens from the booksnap.ai bundle: `hero-right` and
    `how-04` there are only 236×512, and scaling them up adds no detail — an
    earlier version of this page shipped exactly that soft, upscaled mockup.
-   Take captures from the app at device resolution instead. The two in use are
-   ~740–750px wide, which covers a 3× display at the sizes they render.
+   Take captures from the app at device resolution instead — both files in use
+   came in at 1500×3248 and are cut to 739×1600, which covers a 3× display at
+   the ~210px the hero renders them.
+
+   ⚠️ `screen-chat.png` carries "2/10 questions used" in its header. It sits
+   under the hero's Premium label, beside a meter reading "Unlimited". At
+   ~210px the line is a few pixels tall and unreadable, but it is a real
+   contradiction: replace it with a capture from an account where the counter
+   is absent as soon as one exists.
 6. The page is `noindex` — it is an in-app / retargeting destination and should
    not compete with booksnap.ai in search.
 
