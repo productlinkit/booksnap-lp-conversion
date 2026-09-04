@@ -6,17 +6,18 @@ import { Blob, Icon } from './primitives'
 /**
  * The checkout preview.
  *
- * ⚠️ No payment is taken here and none can be. The card fields are `readOnly`
- * and hold sample values, nothing is bound to state, and there is no form
- * submission or network call anywhere on this page. That is deliberate rather
- * than unfinished: a page that looks like a checkout and accepts typing will
- * be given real card numbers by real people, and this project has no backend,
- * no Stripe key and no session to do anything safe with them. Real payment
- * lives in the app, behind a signed-in session, and the button hands off to it.
+ * ⚠️ No payment is taken here and none can be. The visible "preview only"
+ * notice was removed on request, but the card fields are still `readOnly` with
+ * sample values, nothing is bound to state, and the page makes no network call
+ * of any kind. Keep it that way until there is a real integration: a checkout
+ * that accepts typing gets given real card numbers by real people, and this
+ * project has no backend, no Stripe key and no session to hold them safely.
+ * Inert fields mean no card data can be entered at all, so nothing can leak.
  *
- * To make this take money for real it needs Stripe Elements, the publishable
- * key, and an authenticated call to `/stripe/subscribe` — which is a different
- * piece of work, not a few edits to this file.
+ * Real payment lives in the app, behind a signed-in session, and the button
+ * hands off to it. To take money here instead needs Stripe Elements, the
+ * publishable key, and an authenticated call to `/stripe/subscribe` — a
+ * different piece of work, not a few edits to this file.
  */
 
 /** A card field: looks like the real thing, accepts nothing. */
@@ -38,7 +39,6 @@ function Field({ label, value, className = '', icon }) {
           value={value}
           readOnly
           tabIndex={-1}
-          aria-describedby="preview-notice"
           autoComplete="off"
           className="w-full cursor-default bg-transparent text-[14.5px] outline-none"
           style={{ color: 'var(--color-on-surface-variant)' }}
@@ -130,20 +130,6 @@ export default function Checkout() {
           {TRIAL.show
             ? `Your first ${TRIAL.days} days are free. Cancel before they end and you are not charged.`
             : 'One upgrade, every cap lifted. Cancel anytime.'}
-        </p>
-
-        {/* Stated once, plainly, at the top of the form it applies to. */}
-        <p
-          id="preview-notice"
-          className="mt-6 flex items-start gap-2.5 rounded-2xl p-3.5 text-[13px]"
-          style={{ backgroundColor: 'var(--color-error-container)', color: 'var(--color-tertiary-container)' }}
-        >
-          <Icon name="info" className="mt-px shrink-0 text-[18px]" />
-          <span>
-            <strong>Preview only.</strong> No card is charged and these fields accept nothing — payment
-            is taken in the BookSnap app, where your account and card are already set up. Continuing
-            takes you there.
-          </span>
         </p>
 
         <div className="mt-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.86fr)] lg:gap-6">

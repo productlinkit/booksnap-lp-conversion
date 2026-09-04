@@ -27,16 +27,19 @@ deep-linked or refreshed on any host, and costs no routing dependency:
 
 `vercel.json` sets `cleanUrls`, so `/checkout` resolves without the extension.
 
-⚠️ **The checkout takes no payment and cannot.** Its card fields are `readOnly`
-with sample values, nothing is bound to state, and the page makes no network
-call of any kind — that is deliberate, not unfinished. A page that looks like a
-checkout and accepts typing gets given real card numbers by real people, and
-this project has no backend, no Stripe key and no session to handle them
-safely. The button hands off to `apps.booksnap.ai/home`; real payment lives in
-the app behind a signed-in session. To make it charge for real needs Stripe
-Elements, the publishable key and an authenticated `/stripe/subscribe` call —
-separate work. Until then, `UPGRADE_URL` can be pointed back at `PLANS_URL` to
-send readers straight to the app's own checkout.
+⚠️ **The checkout takes no payment.** It looks finished — the visible
+"preview only" notice was removed on request — but its card fields are
+`readOnly` with sample values, nothing is bound to state, and the page makes no
+network call of any kind. The button hands off to `apps.booksnap.ai/home`, and
+real payment happens in the app behind a signed-in session.
+
+**Leave the fields inert until there is a real integration.** A checkout that
+accepts typing gets given real card numbers by real people, and this project
+has no backend, no Stripe key and no session to hold them safely; inert fields
+mean no card data can be entered at all, so none can leak. Making it charge
+needs Stripe Elements, the publishable key and an authenticated
+`/stripe/subscribe` call — separate work. Until then `UPGRADE_URL` can point
+back at `PLANS_URL` to send readers straight to the app's own checkout.
 
 ## Structure
 
