@@ -5,33 +5,39 @@ import { Blob, Icon, SectionHead, Stars } from './primitives'
 /**
  * Proof, then the objections that stop a warm user at checkout.
  *
- * The reviews sit in a plain grid. They were in CSS columns for masonry
- * packing, but a column flow re-balances while the cards are still animating
- * in, so cards jumped between columns as they appeared and the block looked
- * like it was assembling itself at random. A fixed grid places every card
- * before anything moves. The quotes run 202–230px, close enough that the
- * ragged bottom edge masonry was solving is barely visible.
+ * Three reviews on one row. They were in CSS columns for masonry packing, but
+ * a column flow re-balances while its children are still animating in, so cards
+ * jumped between columns as they appeared and the block looked like it was
+ * assembling itself at random. A fixed grid places every card before anything
+ * moves.
  *
- * Each card then converges from its own direction into that fixed slot, and
- * keeps the slight rotation the site gives its own review cards.
+ * Each card then converges from its own direction into that slot, and keeps the
+ * slight rotation the site gives its own review cards.
  *
  * The review quoted up in the pricing panel is dropped here — the same words
  * twice on one page reads as thin proof, not more of it.
  */
-const REVIEWS = TESTIMONIALS.filter((_, i) => i !== PRICING_QUOTE_INDEX)
+/**
+ * Three reviews, not the whole set.
+ *
+ * These three are the ones that answer what Premium actually sells: volume
+ * (Sarah reads three books a week), Ask AI depth (Sophia's "personal tutor"),
+ * and the audio (David). The two left out — information density and a
+ * compliment about the UI — are true but argue for BookSnap generally, not for
+ * removing a cap. Elena's is quoted beside the price and is excluded here so
+ * no review appears twice.
+ */
+const REVIEWS = TESTIMONIALS.filter((_, i) => i !== PRICING_QUOTE_INDEX).slice(0, 3)
 
 /**
- * Where each card starts, by grid position: the outer columns come in from
- * their own side, the middle from above and below, and they meet in the grid.
- * Modest distances — a card that flies half the viewport reads as a slideshow
- * rather than an arrival.
+ * Where each card starts: the outer two come in from their own side, the middle
+ * one from above, and the three meet on one row. Modest distances — a card that
+ * flies half the viewport reads as a slideshow rather than an arrival.
  */
 const FROM = [
-  { cx: '-48px', cy: '-36px' },
+  { cx: '-52px', cy: '-32px' },
   { cx: '0px', cy: '-64px' },
-  { cx: '48px', cy: '-36px' },
-  { cx: '-52px', cy: '44px' },
-  { cx: '52px', cy: '44px' },
+  { cx: '52px', cy: '-32px' },
 ]
 
 export default function Testimonial() {
@@ -49,7 +55,7 @@ export default function Testimonial() {
           />
         </div>
 
-        <div className="mt-10 grid grid-cols-1 items-start gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 items-start gap-4 md:grid-cols-3 md:gap-5">
           {REVIEWS.map((review, i) => (
             <figure
               key={review.name}
