@@ -15,6 +15,29 @@ npm run preview
 npm run lint     # oxlint
 ```
 
+## Pages
+
+Two static entries, not a client router — the checkout survives being
+deep-linked or refreshed on any host, and costs no routing dependency:
+
+| Entry | Route | What it is |
+| --- | --- | --- |
+| `index.html` → `src/main.jsx` | `/` | the landing page |
+| `checkout.html` → `src/checkout.jsx` | `/checkout` | the checkout **preview** |
+
+`vercel.json` sets `cleanUrls`, so `/checkout` resolves without the extension.
+
+⚠️ **The checkout takes no payment and cannot.** Its card fields are `readOnly`
+with sample values, nothing is bound to state, and the page makes no network
+call of any kind — that is deliberate, not unfinished. A page that looks like a
+checkout and accepts typing gets given real card numbers by real people, and
+this project has no backend, no Stripe key and no session to handle them
+safely. The button hands off to `apps.booksnap.ai/home`; real payment lives in
+the app behind a signed-in session. To make it charge for real needs Stripe
+Elements, the publishable key and an authenticated `/stripe/subscribe` call —
+separate work. Until then, `UPGRADE_URL` can be pointed back at `PLANS_URL` to
+send readers straight to the app's own checkout.
+
 ## Structure
 
 ```
@@ -23,6 +46,7 @@ src/
 │   ├── Navbar.jsx          floating pill nav, progress hairline, Go Premium
 │   ├── Hero.jsx            usage counter → headline → CTA → cover marquee
 │   ├── LibraryPreview.jsx  the blocked ⇄ running phone pair in the hero
+│   ├── Checkout.jsx        the checkout preview (no payment is taken)
 │   ├── Comparison.jsx      Free vs Premium (table ≥ md, stacked cards below)
 │   ├── Pricing.jsx         monthly vs annual, annual recommended
 │   ├── AskAI.jsx           Ask AI deep dive + the real Ask AI screen
@@ -38,7 +62,8 @@ src/
 │   └── hooks.js            useReveal, useScrolled, useInView, media queries
 ├── styles/index.css        design tokens + shared motion/type classes
 ├── App.jsx
-└── main.jsx
+├── main.jsx                entry for index.html
+└── checkout.jsx            entry for checkout.html
 ```
 
 Static art lives in `public/`:

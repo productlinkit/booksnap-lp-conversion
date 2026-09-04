@@ -10,14 +10,23 @@
 export const APP_URL = 'https://apps.booksnap.ai/'
 
 /**
- * The in-app plan picker — the real route, read off the app's own router table
- * (`/profile/subscription/plans`), not a guessed query string. From there the
- * app continues to /profile/subscription/payment and its
- * confirmation / success / failed screens, so this is the entry to checkout
- * rather than a detour. Linking straight to the payment route would land the
- * user there with no plan selected.
+ * Every CTA on the page goes here: the checkout page shipped alongside this one
+ * (`checkout.html`), not straight into the app.
+ *
+ * ⚠️ That checkout takes no payment. It is a preview of the flow — the card
+ * fields are inert and nothing is submitted anywhere. Its button hands the
+ * reader to the app, which is where the real Stripe checkout lives
+ * (`/profile/subscription/plans` → `/profile/subscription/payment`). Before
+ * this page goes in front of real traffic, either wire that checkout up
+ * properly or point `UPGRADE_URL` back at `PLANS_URL` below.
  */
-export const UPGRADE_URL = `${APP_URL}profile/subscription/plans`
+export const UPGRADE_URL = '/checkout'
+
+/** The app's own plan picker, where real payment actually happens. */
+export const PLANS_URL = `${APP_URL}profile/subscription/plans`
+
+/** Where the checkout hands off — the app's home screen, per its router. */
+export const HOME_URL = `${APP_URL}home`
 
 /**
  * The free-tier usage state this page is written against.

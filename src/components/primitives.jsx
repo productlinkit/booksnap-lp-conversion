@@ -52,7 +52,9 @@ export function CtaButton({
     },
   }
 
-  const isInternal = href.startsWith('#')
+  // Anchors and same-origin paths stay in this tab; only the app and other
+  // external destinations get target="_blank".
+  const isInternal = href.startsWith('#') || href.startsWith('/')
 
   return (
     <a
