@@ -4,11 +4,17 @@ import { useCountUp } from '../lib/hooks'
 import { Blob, CtaButton, Icon, Stars } from './primitives'
 import LibraryPreview from './LibraryPreview'
 
-/** The drifting icons booksnap.ai scatters behind its hero. Decorative only. */
+/**
+ * The drifting icons booksnap.ai scatters behind its hero. Decorative only.
+ *
+ * All of them sit outside the copy column's footprint. A fourth used to float
+ * at `left-[14%] bottom-[12%]`; the three-line headline pushed the CTA down
+ * into it, so it is gone rather than nudged — the left column is text-heavy
+ * enough that anything drifting behind it will collide again at some width.
+ */
 const DRIFT = [
   { name: 'auto_stories', className: 'left-[6%] top-[14%] animate-float-1 text-[42px] md:text-[64px]', opacity: 0.22 },
   { name: 'bolt', className: 'right-[8%] top-[10%] animate-float-3 text-[34px] md:text-[52px]', opacity: 0.24 },
-  { name: 'forum', className: 'left-[14%] bottom-[12%] animate-float-4 text-[30px] md:text-[46px]', opacity: 0.18 },
   { name: 'headphones', className: 'right-[4%] bottom-[18%] animate-float-2 text-[32px] md:text-[48px]', opacity: 0.18 },
 ]
 
@@ -83,16 +89,22 @@ export default function Hero() {
 
           <h1 className="rsp-hero-h1 mt-5 font-extrabold" style={{ color: 'var(--color-primary)' }}>
             <span className="rl">
-              <span>You&rsquo;ve Outgrown</span>
+              <span>Unlimited Books.</span>
             </span>
             <span className="rl">
-              <span>the Free Plan.</span>
+              <span>Unlimited Ask AI.</span>
+            </span>
+            <span className="rl">
+              <span>One Upgrade.</span>
             </span>
           </h1>
 
+          {/* The headline now says "unlimited books" and "unlimited Ask AI"
+              itself, so the subheadline carries what it does not: the rest of
+              what the upgrade opens. */}
           <p className="rsp-hero-p mt-5 max-w-xl" style={{ color: 'var(--color-on-surface-variant)' }}>
-            Keep the momentum going. Premium gives you unlimited Book Snaps, unlimited Ask AI
-            questions, offline downloads and early access to every new release.
+            One upgrade lifts every cap on your account — and adds offline downloads, HD ad-free
+            audio, and early access to every new release.
           </p>
 
           {/* `flex-wrap` + `whitespace-nowrap`: on a ~450px column (1024px

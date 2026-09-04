@@ -1,17 +1,152 @@
 import { useState } from 'react'
 import { PRICING, CTA } from '../lib/config'
-import { PREMIUM_FEATURES } from '../lib/content'
-import { TESTIMONIALS, PRICING_QUOTE_INDEX } from '../lib/content'
+import { PREMIUM_FEATURES, TESTIMONIALS, PRICING_QUOTE_INDEX } from '../lib/content'
 import { Blob, CtaButton, Flower, Icon, SectionHead, Stars } from './primitives'
 
 /**
- * Two plans, one recommended.
+ * One plan.
  *
- * Selection is a real radio group so the choice is keyboard-operable and
- * announced; the card body just forwards its clicks to the input. The CTA is a
- * sibling of the input rather than a child of a <label>, because a link inside
- * a label is invalid HTML and swallows the click on touch.
+ * Selection is a real radio so the choice is keyboard-operable and announced;
+ * the card body forwards its clicks to the input. The CTA is a sibling of the
+ * input rather than a child of a <label> — a link inside a label is invalid
+ * HTML and swallows the tap on touch.
+ *
+ * `recommended` is the only thing that separates the two visually: a white
+ * ground instead of a translucent one, a gold badge, a gold button and the
+ * struck-through price. The rows themselves are identical on both.
  */
+function PlanCard({
+  id,
+  name,
+  recommended = false,
+  selected,
+  onSelect,
+  tagline,
+  amount,
+  period,
+  strike,
+  note,
+  cta,
+  ctaLocation,
+  reveal,
+  order,
+}) {
+  const ink = recommended ? 'var(--color-primary)' : '#fff'
+  const muted = recommended ? 'var(--color-on-surface-variant)' : 'rgba(255,255,255,0.72)'
+
+  return (
+    <div
+      onClick={onSelect}
+      className={`${reveal} ${order} flex cursor-pointer flex-col rounded-[28px] p-6 transition-all duration-300 sm:p-7`}
+      style={
+        recommended
+          ? {
+              backgroundColor: 'var(--color-surface-lowest)',
+              border: `2px solid ${selected ? 'var(--color-tertiary-fixed)' : 'transparent'}`,
+              boxShadow: selected ? '0 28px 70px rgba(0,0,0,0.30)' : '0 12px 36px rgba(0,0,0,0.18)',
+            }
+          : {
+              backgroundColor: 'rgba(255,255,255,0.07)',
+              border: `1.5px solid ${selected ? 'var(--color-tertiary-fixed)' : 'rgba(255,255,255,0.16)'}`,
+            }
+      }
+    >
+      {/* Row 1 — name and badge. Both cards carry a chip so the two header
+          rows are the same height and the prices below them line up. */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <span className="flex items-center gap-2.5">
+          <input
+            type="radio"
+            id={`plan-${id}`}
+            name="billing"
+            value={id}
+            checked={selected}
+            onChange={onSelect}
+            className="h-4 w-4 shrink-0"
+            style={{ accentColor: recommended ? 'var(--color-primary)' : 'var(--color-tertiary-fixed)' }}
+          />
+          <label htmlFor={`plan-${id}`} className="cursor-pointer text-[15px] font-bold" style={{ color: ink }}>
+            {name}
+          </label>
+        </span>
+        <span
+          className="rounded-full px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.08em]"
+          style={
+            recommended
+              ? { backgroundColor: 'var(--color-tertiary-fixed)', color: 'var(--color-tertiary-container)' }
+              : { backgroundColor: 'rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.82)' }
+          }
+        >
+          {tagline}
+        </span>
+      </div>
+
+      {/* Row 2 — the price. */}
+      <p className="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        <span className="rsp-price font-extrabold" style={{ color: ink }}>
+          {amount}
+        </span>
+        <span className="text-[15px]" style={{ color: muted }}>
+          {period}
+        </span>
+        {strike && (
+          <span className="text-[15px] line-through" style={{ color: muted, opacity: 0.7 }}>
+            {strike}
+          </span>
+        )}
+      </p>
+
+      {/* Row 3 — one line under the price, on both cards. */}
+      <p
+        className="mt-2 text-[14px] font-semibold"
+        style={{ color: recommended ? 'var(--color-primary-container)' : 'rgba(255,255,255,0.78)' }}
+      >
+        {note}
+      </p>
+
+      {/* Row 4 — the same six features, because both plans ship them. */}
+      <ul className="mt-6 flex flex-col gap-2.5">
+        {PREMIUM_FEATURES.map((feature) => (
+          <li key={feature} className="flex items-start gap-2.5">
+            <Icon
+              name="check_circle"
+              className="mt-px shrink-0 text-[18px]"
+              style={{
+                color: recommended ? 'var(--color-primary-container)' : 'var(--color-secondary-container)',
+                fontVariationSettings: "'FILL' 1",
+              }}
+            />
+            <span className="text-[14.5px]" style={{ color: muted }}>
+              {feature}
+            </span>
+          </li>
+        ))}
+      </ul>
+
+      {/* Absorbs any residual difference so both buttons sit on one line. */}
+      <div className="flex-1" />
+
+      <CtaButton
+        location={ctaLocation}
+        size="lg"
+        variant={recommended ? 'primary' : 'outline-light'}
+        className={`mt-7 w-full ${recommended ? 'cta-sheen' : ''}`}
+      >
+        {recommended && <Icon name="lock_open" className="text-[19px]" />}
+        {cta}
+      </CtaButton>
+
+      <p
+        className="mt-3 flex items-center justify-center gap-1.5 text-center text-[12.5px]"
+        style={{ color: recommended ? 'var(--color-on-surface-variant)' : 'rgba(255,255,255,0.6)' }}
+      >
+        <Icon name="check_circle" className="text-[15px]" />
+        {CTA.reassurance}
+      </p>
+    </div>
+  )
+}
+
 /** The Ask AI review, quoted beside the price because Ask AI is what is sold. */
 const QUOTE = TESTIMONIALS[PRICING_QUOTE_INDEX]
 
@@ -47,158 +182,43 @@ export default function Pricing() {
         <fieldset className="mt-12 border-0 p-0">
           <legend className="sr-only">Choose a billing period</legend>
 
-          <div className="grid grid-cols-1 items-center gap-5 lg:grid-cols-[minmax(0,0.86fr)_minmax(0,1fr)] lg:gap-6">
-            {/* ---------- Monthly: deliberately the quieter card ---------- */}
-            <div
-              onClick={() => setPlan('monthly')}
-              className="fade-left stagger-1 order-2 cursor-pointer rounded-[28px] p-6 transition-all duration-300 sm:p-7 lg:order-1"
-              style={{
-                backgroundColor: 'rgba(255,255,255,0.07)',
-                border: `1.5px solid ${plan === 'monthly' ? 'var(--color-tertiary-fixed)' : 'rgba(255,255,255,0.16)'}`,
-              }}
-            >
-              <div className="flex items-center gap-2.5">
-                <input
-                  type="radio"
-                  id="plan-monthly"
-                  name="billing"
-                  value="monthly"
-                  checked={plan === 'monthly'}
-                  onChange={() => setPlan('monthly')}
-                  className="h-4 w-4 shrink-0 accent-[var(--color-tertiary-fixed)]"
-                />
-                <label
-                  htmlFor="plan-monthly"
-                  className="cursor-pointer text-[15px] font-bold"
-                  style={{ color: '#fff' }}
-                >
-                  Monthly
-                </label>
-              </div>
+          {/* Both cards run the same six rows in the same order, so they end at
+              the same height without being forced to — no stretched card with a
+              hole in it, and no card that reads as an afterthought. The plans
+              really do ship identical features; only the billing differs, and
+              two matching lists say that more plainly than a footnote would. */}
+          <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-6">
+            <PlanCard
+              id="monthly"
+              name="Monthly"
+              selected={plan === 'monthly'}
+              onSelect={() => setPlan('monthly')}
+              tagline="Flexible"
+              amount={PRICING.monthly.amount}
+              period={PRICING.monthly.period}
+              note="Billed month to month. Stop whenever you like."
+              cta="Go Premium monthly"
+              ctaLocation="pricing-monthly"
+              reveal="fade-left stagger-1"
+              order="order-2 lg:order-1"
+            />
 
-              <p className="mt-5 flex flex-wrap items-baseline gap-x-2">
-                <span className="rsp-price font-extrabold" style={{ color: '#fff' }}>
-                  {PRICING.monthly.amount}
-                </span>
-                <span className="text-[15px]" style={{ color: 'rgba(255,255,255,0.7)' }}>
-                  {PRICING.monthly.period}
-                </span>
-              </p>
-
-              <p className="mt-3 text-[14px]" style={{ color: 'rgba(255,255,255,0.78)' }}>
-                Every Premium feature, billed month to month. Stop whenever you like.
-              </p>
-
-              <p
-                className="mt-4 flex items-start gap-2 text-[13.5px]"
-                style={{ color: 'rgba(255,255,255,0.62)' }}
-              >
-                <Icon name="info" className="mt-px shrink-0 text-[16px]" />
-                Same features as annual — you just pay as you go, and lose the{' '}
-                {PRICING.annual.savePct}% saving.
-              </p>
-
-              <CtaButton
-                location="pricing-monthly"
-                variant="outline-light"
-                size="lg"
-                className="mt-6 w-full"
-              >
-                Go Premium monthly
-              </CtaButton>
-
-              <p className="mt-3 text-center text-[12.5px]" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                Cancel anytime.
-              </p>
-            </div>
-
-            {/* ---------- Annual: the recommended plan ---------- */}
-            <div
-              onClick={() => setPlan('annual')}
-              className="fade-right stagger-2 order-1 cursor-pointer rounded-[28px] p-6 transition-all duration-300 sm:p-8 lg:order-2"
-              style={{
-                backgroundColor: 'var(--color-surface-lowest)',
-                border: `2px solid ${plan === 'annual' ? 'var(--color-tertiary-fixed)' : 'transparent'}`,
-                boxShadow:
-                  plan === 'annual'
-                    ? '0 28px 70px rgba(0,0,0,0.30)'
-                    : '0 12px 36px rgba(0,0,0,0.18)',
-              }}
-            >
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2.5">
-                  <input
-                    type="radio"
-                    id="plan-annual"
-                    name="billing"
-                    value="annual"
-                    checked={plan === 'annual'}
-                    onChange={() => setPlan('annual')}
-                    className="h-4 w-4 shrink-0 accent-[var(--color-primary)]"
-                  />
-                  <label
-                    htmlFor="plan-annual"
-                    className="cursor-pointer text-[15px] font-bold"
-                    style={{ color: 'var(--color-primary)' }}
-                  >
-                    Annual
-                  </label>
-                </div>
-                <span
-                  className="rounded-full px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.08em]"
-                  style={{ backgroundColor: 'var(--color-tertiary-fixed)', color: 'var(--color-tertiary-container)' }}
-                >
-                  Best value · Save {PRICING.annual.savePct}%
-                </span>
-              </div>
-
-              <p className="mt-5 flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                <span className="rsp-price font-extrabold" style={{ color: 'var(--color-primary)' }}>
-                  {PRICING.annual.amount}
-                </span>
-                <span className="text-[15px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-                  {PRICING.annual.period}
-                </span>
-                <span
-                  className="text-[15px] line-through"
-                  style={{ color: 'var(--color-on-surface-variant)', opacity: 0.6 }}
-                >
-                  {PRICING.annual.strike}
-                </span>
-              </p>
-
-              <p className="mt-2 text-[14px] font-semibold" style={{ color: 'var(--color-primary-container)' }}>
-                {PRICING.annual.perMonth}
-              </p>
-
-              <ul className="mt-6 flex flex-col gap-2.5">
-                {PREMIUM_FEATURES.map((feature) => (
-                  <li key={feature} className="flex items-start gap-2.5">
-                    <Icon
-                      name="check_circle"
-                      className="mt-px shrink-0 text-[18px]"
-                      style={{ color: 'var(--color-primary-container)', fontVariationSettings: "'FILL' 1" }}
-                    />
-                    <span className="text-[14.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-                      {feature}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              <CtaButton location="pricing-annual" size="lg" className="cta-sheen mt-7 w-full">
-                <Icon name="lock_open" className="text-[19px]" />
-                {CTA.pricing}
-              </CtaButton>
-
-              <p
-                className="mt-3 flex items-center justify-center gap-1.5 text-center text-[12.5px]"
-                style={{ color: 'var(--color-on-surface-variant)' }}
-              >
-                <Icon name="check_circle" className="text-[15px]" />
-                {CTA.reassurance}
-              </p>
-            </div>
+            <PlanCard
+              id="annual"
+              name="Annual"
+              recommended
+              selected={plan === 'annual'}
+              onSelect={() => setPlan('annual')}
+              tagline={`Best value · Save ${PRICING.annual.savePct}%`}
+              amount={PRICING.annual.amount}
+              period={PRICING.annual.period}
+              strike={PRICING.annual.strike}
+              note={PRICING.annual.perMonth}
+              cta={CTA.pricing}
+              ctaLocation="pricing-annual"
+              reveal="fade-right stagger-2"
+              order="order-1 lg:order-2"
+            />
           </div>
         </fieldset>
 

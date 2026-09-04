@@ -231,6 +231,7 @@ button:focus-visible,
 }
 .visible .rl > span { transform: none; }
 .visible .rl:nth-child(2) > span { transition-delay: 0.1s; }
+.visible .rl:nth-child(3) > span { transition-delay: 0.2s; }
 
 /* ---------- Usage meter ---------- */
 .meter-fill {
