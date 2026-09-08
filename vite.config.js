@@ -11,6 +11,7 @@ export default defineConfig({
       // deep-linked or refreshed on any static host.
       input: {
         main: 'index.html',
+        start: 'start.html',
         checkout: 'checkout.html',
       },
     },

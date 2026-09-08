@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { PRICING, TRIAL, HOME_URL, PLANS_URL, CTA } from '../lib/config'
-import { PREMIUM_FEATURES, TRUST } from '../lib/content'
+import { PLANS } from '../lib/onboarding'
+import { HOME_URL, PLANS_URL, CTA } from '../lib/config'
+import { TRUST } from '../lib/content'
 import { Blob, Icon } from './primitives'
 
 /**
@@ -49,59 +49,15 @@ function Field({ label, value, className = '', icon }) {
   )
 }
 
-function PlanOption({ id, name, note, amount, period, badge, selected, onSelect }) {
-  return (
-    <label
-      htmlFor={`co-${id}`}
-      className="flex cursor-pointer items-start gap-3 rounded-2xl p-3.5 transition-all duration-200"
-      style={{
-        backgroundColor: selected ? 'var(--color-secondary-container)' : 'var(--color-surface)',
-        border: `1.5px solid ${selected ? 'var(--color-primary-container)' : 'rgba(0,54,37,0.10)'}`,
-      }}
-    >
-      <input
-        type="radio"
-        id={`co-${id}`}
-        name="co-plan"
-        checked={selected}
-        onChange={onSelect}
-        className="mt-1 h-4 w-4 shrink-0"
-        style={{ accentColor: 'var(--color-primary)' }}
-      />
-      <span className="min-w-0 flex-1">
-        <span className="flex flex-wrap items-center gap-2">
-          <span className="text-[14.5px] font-bold" style={{ color: 'var(--color-primary)' }}>
-            {name}
-          </span>
-          {badge && (
-            <span
-              className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.07em]"
-              style={{ backgroundColor: 'var(--color-tertiary-fixed)', color: 'var(--color-tertiary-container)' }}
-            >
-              {badge}
-            </span>
-          )}
-        </span>
-        <span className="mt-0.5 block text-[12.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-          {note}
-        </span>
-      </span>
-      <span className="shrink-0 text-right">
-        <span className="block text-[15px] font-extrabold" style={{ color: 'var(--color-primary)' }}>
-          {amount}
-        </span>
-        <span className="block text-[11.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-          {period}
-        </span>
-      </span>
-    </label>
-  )
+/** The plan chosen back in /start, read off the query string. */
+function chosenPlan() {
+  const id = new URLSearchParams(window.location.search).get('plan')
+  return PLANS.find((p) => p.id === id) || PLANS[0]
 }
 
 export default function Checkout() {
-  const [plan, setPlan] = useState('annual')
-  const chosen = plan === 'annual' ? PRICING.annual : PRICING.monthly
-  const dueToday = TRIAL.show ? PRICING.trialPrice : chosen.amount
+  const plan = chosenPlan()
+  const dueToday = plan.price
 
   return (
     <div className="relative min-h-full overflow-x-clip pb-16">
@@ -113,7 +69,7 @@ export default function Checkout() {
           <img src="/booksnap-logo.png" alt="BookSnap" className="h-6 w-auto sm:h-7" />
         </a>
         <a
-          href="/"
+          href="/start"
           className="flex items-center gap-1.5 text-[13.5px] font-semibold no-underline transition-opacity hover:opacity-70"
           style={{ color: 'var(--color-on-surface-variant)' }}
         >
@@ -127,9 +83,9 @@ export default function Checkout() {
           Confirm your upgrade.
         </h1>
         <p className="rsp-section-p mt-2 max-w-xl" style={{ color: 'var(--color-on-surface-variant)' }}>
-          {TRIAL.show
-            ? `Your first ${TRIAL.days} days are free. Cancel before they end and you are not charged.`
-            : 'One upgrade, every cap lifted. Cancel anytime.'}
+          {plan.badge
+            ? `Your first 3 days are free. Cancel before they end and you are not charged.`
+            : `${plan.name} — ${plan.tagline}`}
         </p>
 
         <div className="mt-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.86fr)] lg:gap-6">
@@ -158,7 +114,7 @@ export default function Checkout() {
             </div>
           </section>
 
-          {/* ---------- Order summary ---------- */}
+          {/* ---------- What was chosen back in /start ---------- */}
           <section
             className="rounded-[28px] p-5 sm:p-6"
             style={{
@@ -168,43 +124,36 @@ export default function Checkout() {
             }}
             aria-label="Your plan"
           >
-            <h2 className="rsp-card-h3 font-bold" style={{ color: 'var(--color-primary)' }}>
-              Your plan
-            </h2>
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="rsp-card-h3 font-bold" style={{ color: 'var(--color-primary)' }}>
+                {plan.name}
+              </h2>
+              {plan.badge && (
+                <span
+                  className="shrink-0 rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.07em]"
+                  style={{ backgroundColor: 'var(--color-tertiary-fixed)', color: 'var(--color-tertiary-container)' }}
+                >
+                  {plan.badge}
+                </span>
+              )}
+            </div>
+            <p className="mt-1 text-[13.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
+              {plan.tagline}{' '}
+              <a href="/start" className="font-semibold underline" style={{ color: 'var(--color-primary)' }}>
+                Change plan
+              </a>
+            </p>
 
-            <fieldset className="mt-4 flex flex-col gap-2.5 border-0 p-0">
-              <legend className="sr-only">Choose a billing period</legend>
-              <PlanOption
-                id="annual"
-                name="Premium Annual"
-                note={PRICING.annual.perMonth}
-                amount={PRICING.annual.amount}
-                period={PRICING.annual.period}
-                badge={`Save ${PRICING.annual.savePct}%`}
-                selected={plan === 'annual'}
-                onSelect={() => setPlan('annual')}
-              />
-              <PlanOption
-                id="monthly"
-                name="Premium Monthly"
-                note="Billed month to month"
-                amount={PRICING.monthly.amount}
-                period={PRICING.monthly.period}
-                selected={plan === 'monthly'}
-                onSelect={() => setPlan('monthly')}
-              />
-            </fieldset>
-
-            <ul className="mt-5 flex flex-col gap-2" style={{ borderTop: '1px solid rgba(0,54,37,0.08)' }}>
-              {PREMIUM_FEATURES.slice(0, 3).map((feature) => (
-                <li key={feature} className="mt-2 flex items-start gap-2 first:mt-3">
+            <ul className="mt-5 flex flex-col gap-2">
+              {plan.benefits.map((benefit) => (
+                <li key={benefit} className="flex items-start gap-2">
                   <Icon
                     name="check_circle"
                     className="mt-px shrink-0 text-[16px]"
                     style={{ color: 'var(--color-primary-container)', fontVariationSettings: "'FILL' 1" }}
                   />
                   <span className="text-[13.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-                    {feature}
+                    {benefit}
                   </span>
                 </li>
               ))}
@@ -215,22 +164,11 @@ export default function Checkout() {
               style={{ borderTop: '1px solid rgba(0,54,37,0.08)' }}
             >
               <div className="flex items-baseline justify-between gap-3">
-                <dt style={{ color: 'var(--color-on-surface-variant)' }}>
-                  {plan === 'annual' ? 'Premium Annual' : 'Premium Monthly'}
-                </dt>
+                <dt style={{ color: 'var(--color-on-surface-variant)' }}>{plan.name}</dt>
                 <dd className="font-semibold" style={{ color: 'var(--color-primary)' }}>
-                  {chosen.amount}
-                  {chosen.period}
+                  {plan.then ? plan.then.replace('Then ', '') : `${plan.price} / month`}
                 </dd>
               </div>
-              {TRIAL.show && (
-                <div className="flex items-baseline justify-between gap-3">
-                  <dt style={{ color: 'var(--color-on-surface-variant)' }}>{TRIAL.days}-day free trial</dt>
-                  <dd className="font-semibold" style={{ color: 'var(--color-primary-container)' }}>
-                    −{chosen.amount}
-                  </dd>
-                </div>
-              )}
               <div
                 className="mt-2 flex items-baseline justify-between gap-3 pt-3"
                 style={{ borderTop: '1px solid rgba(0,54,37,0.08)' }}

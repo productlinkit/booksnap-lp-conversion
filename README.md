@@ -23,7 +23,23 @@ deep-linked or refreshed on any host, and costs no routing dependency:
 | Entry | Route | What it is |
 | --- | --- | --- |
 | `index.html` → `src/main.jsx` | `/` | the landing page |
+| `start.html` → `src/start.jsx` | `/start` | the sign-up flow |
 | `checkout.html` → `src/checkout.jsx` | `/checkout` | the checkout **preview** |
+
+The click path is `/` → `/start` → `/checkout` → `apps.booksnap.ai/home`, or
+`/start` → the app directly via "Continue Without Plan".
+
+`/start` rebuilds the app's own onboarding — categories, reading vibe, plan —
+with an email step added in the middle, so a reader arriving from this page
+meets the flow they would have met in the app. Colours are sampled from the
+app's screens rather than guessed: `#379777` for the accented word, `#276b54`
+for the buttons, `#f4f9f7` and `#fdf6d5` for the two washes. The washes live
+inside the 430px column, not the page — sized against full desktop width they
+swallow the screen — which also gives the flow a phone-shaped panel on desktop.
+
+Nothing in the flow is submitted anywhere. The email field accepts typing
+because a flow you cannot fill in is not a flow, but the value stays in
+component state; there is no backend to send it to.
 
 `vercel.json` sets `cleanUrls`, so `/checkout` resolves without the extension.
 
@@ -50,6 +66,7 @@ src/
 │   ├── Hero.jsx            usage counter → headline → CTA → cover marquee
 │   ├── LibraryPreview.jsx  the blocked ⇄ running phone pair in the hero
 │   ├── Checkout.jsx        the checkout preview (no payment is taken)
+│   ├── Start.jsx           the four-step sign-up flow
 │   ├── Comparison.jsx      Free vs Premium (table ≥ md, stacked cards below)
 │   ├── Pricing.jsx         monthly vs annual, annual recommended
 │   ├── AskAI.jsx           Ask AI deep dive + the real Ask AI screen
@@ -62,10 +79,12 @@ src/
 │   ├── config.js           ⚠️ pricing, usage counters, CTA labels, URLs
 │   ├── content.js          comparison rows, benefits, reviews, trust items
 │   ├── covers.js           catalogue covers (local copies + source URLs)
+│   ├── onboarding.js       ⚠️ flow content + the app's real plan copy
 │   └── hooks.js            useReveal, useScrolled, useInView, media queries
 ├── styles/index.css        design tokens + shared motion/type classes
 ├── App.jsx
 ├── main.jsx                entry for index.html
+├── start.jsx               entry for start.html
 └── checkout.jsx            entry for checkout.html
 ```
 
@@ -157,7 +176,22 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    number comes from and why the catalogue API's own figures contradict each
    other. Replace `PRICE_TABLE`; nothing else needs editing. `CURRENCY` switches
    the page between the USD and IDR tables.
-2. **⚠️ The hero advertises the 3-day free trial.** The app really offers it —
+2. **⚠️ THE APP'S PLAN SCREEN CONTRADICTS THIS PAGE, TWICE.** Both lines below
+   are transcribed from the app's own plan screen into `src/lib/onboarding.js`,
+   left as the app states them rather than quietly reconciled:
+
+   - **Price.** The app sells Premium at **$2.99/month** and Pro at
+     **$5.99/month**. `PRICE_TABLE` in `config.js` says $6.10/month for
+     Premium, from the catalogue API. They cannot both be right.
+   - **Ask AI.** The app's Premium card reads *"Experience with ASK.AI 10 chats
+     monthly"* — the same allowance this page calls the **free** limit.
+     *"Full experience with ASK.AI"* is a **Pro** line. So this page's headline
+     promise, unlimited Ask AI, is a Pro feature, not a Premium one.
+
+   A reader who upgrades on this page's promise and lands on Premium would find
+   the counter still running. Either retarget the page at Pro or correct the
+   claims before it goes in front of traffic.
+3. **⚠️ The hero advertises the 3-day free trial.** The app really offers it —
    its onboarding Trial screen says "Try all features free for 3 days" and
    `/stripe/subscribe` takes `trial_days` — but the app gates it on
    `has_used_trial`, and this page is written for people who have been using
@@ -165,21 +199,19 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    trial, and for them "$0 today" breaks at checkout. `TRIAL.show` in
    `config.js` turns it off, falling back to the annual saving, which is true
    for everyone; better still, hydrate it per user from the same flag.
-3. **CTAs point at `/profile/subscription/plans`**, the app's own plan picker,
-   read off its router table. Checkout continues from there to
-   `/profile/subscription/payment` and its confirmation / success / failed
-   screens. Linking straight to the payment route would land the user there
-   with no plan selected.
-4. **The usage counters should be hydrated per user.** `USAGE` in `config.js` is
+4. **CTAs point at `/start`**, the flow above. `PLANS_URL` in `config.js` still
+   holds the app's own plan picker (`/profile/subscription/plans`, read off its
+   router table) for sending readers straight there instead.
+5. **The usage counters should be hydrated per user.** `USAGE` in `config.js` is
    the fallback for a visitor we can't identify — the momentum framing only
    works if "3 of 3" is the reader's own number.
-5. **Every CTA carries `data-cta="<section>"`**, so GA4 can attribute the
+6. **Every CTA carries `data-cta="<section>"`**, so GA4 can attribute the
    upgrade to the section that earned it from one delegated listener.
-6. **Reviews are the six already published on booksnap.ai**, unedited. None of
+7. **Reviews are the six already published on booksnap.ai**, unedited. None of
    them has been rewritten to mention Premium. `PRICING_QUOTE_INDEX` picks the
    one quoted beside the price; the reviews board drops it so no quote appears
    twice.
-7. **The mockups are real product captures.** They are the only images on the
+8. **The mockups are real product captures.** They are the only images on the
    page that are not catalogue covers, which load live from the API.
    ⚠️ Do not source new screens from the booksnap.ai bundle: `hero-right` and
    `how-04` there are only 236×512, and scaling them up adds no detail — an
@@ -193,7 +225,7 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    ~210px the line is a few pixels tall and unreadable, but it is a real
    contradiction: replace it with a capture from an account where the counter
    is absent as soon as one exists.
-8. The page is `noindex` — it is an in-app / retargeting destination and should
+9. The page is `noindex` — it is an in-app / retargeting destination and should
    not compete with booksnap.ai in search.
 
 ## Responsive

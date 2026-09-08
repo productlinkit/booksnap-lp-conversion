@@ -10,8 +10,9 @@
 export const APP_URL = 'https://apps.booksnap.ai/'
 
 /**
- * Every CTA on the page goes here: the checkout page shipped alongside this one
- * (`checkout.html`), not straight into the app.
+ * Every CTA on the page goes here: the sign-up flow shipped alongside this one
+ * (`start.html`) — categories, reading vibe, email, plan — which then hands on
+ * to `checkout.html` and from there to the app.
  *
  * ⚠️ That checkout takes no payment. It is a preview of the flow — the card
  * fields are inert and nothing is submitted anywhere. Its button hands the
@@ -20,7 +21,7 @@ export const APP_URL = 'https://apps.booksnap.ai/'
  * this page goes in front of real traffic, either wire that checkout up
  * properly or point `UPGRADE_URL` back at `PLANS_URL` below.
  */
-export const UPGRADE_URL = '/checkout'
+export const UPGRADE_URL = '/start'
 
 /** The app's own plan picker, where real payment actually happens. */
 export const PLANS_URL = `${APP_URL}profile/subscription/plans`
