@@ -16,8 +16,15 @@ import { Icon } from './primitives'
  *
  *   - `free` ends at the wall. The counter is spent, and the app's banner
  *     drops in after the second question.
- *   - `premium` never hits one. No counter in the header, and the second
- *     question is answered like the first before the loop restarts.
+ *   - `open` never hits one, and its header reads "Unlimited" — the word the
+ *     app itself shows, and only for `tier === "pro"`. The second question is
+ *     answered like the first before the loop restarts.
+ *
+ * ⚠️ The unlocked side is the **Pro** state, not Premium. Verified in the
+ * app's Ask AI screen: the branch rendering "Unlimited" is `"pro" === tier`,
+ * and every other tier — free and Premium alike — renders a counter. Whatever
+ * this page ends up selling, this frame must not be labelled Premium while it
+ * says Unlimited.
  *
  * The loop starts when the frame is scrolled into view and never runs off
  * screen. Under `prefers-reduced-motion` it renders the finished state
@@ -45,7 +52,7 @@ const SHARED = [
 ]
 const SCRIPTS = {
   free: [...SHARED, { name: 'limit', ms: 4200 }],
-  premium: [...SHARED, { name: 'answer2', ms: 4200 }],
+  open: [...SHARED, { name: 'answer2', ms: 4200 }],
 }
 const CHAR_MS = 32
 
@@ -141,8 +148,8 @@ export default function AskAiChat({ variant = 'free' }) {
               {USAGE.askUsed}/{USAGE.askTotal} questions used
             </span>
           ) : (
-            <span className="mt-0.5 block text-[9.5px] font-semibold" style={{ color: '#276b54' }}>
-              No question limit
+            <span className="mt-0.5 block text-[9.5px] font-bold" style={{ color: '#276b54' }}>
+              Unlimited
             </span>
           )}
         </span>

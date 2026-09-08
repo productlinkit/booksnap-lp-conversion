@@ -19,12 +19,24 @@ export const NAV_LINKS = [
  *     preview of book summaries" and "Upgrade anytime". Nothing anywhere
  *     supports "3 snaps per month", which `USAGE` in `config.js` invents and
  *     the hero still repeats.
- *   - Premium does not lift the Ask AI cap: "Experience with ASK.AI — 10
- *     chats". "Full experience with ASK.AI" is a **Pro** line, which is why
- *     there are three columns.
+ *   - Ask AI is on the free plan, counted, not absent. Read from the app's own
+ *     Ask AI screen rather than inferred: it takes `limits.tier`,
+ *     `limits.max_questions` and `limits.can_ask` from the API, and the branch
+ *     that renders the star and the word "Unlimited" is literally
+ *     `"pro" === tier`. Every other tier — free and Premium alike — renders
+ *     `${used}/${max_questions} questions used`. The count is per book, and a
+ *     separate "Book limit reached" state caps how many books can be asked
+ *     about at all. The capture of a free account reads 10/10, and Premium's
+ *     card says 10 chats, so Premium does not lift that cap; Pro does. Hence
+ *     three columns.
  *   - The catalogue API describes the same plans differently again
  *     ("Unlimited access to ALL books", "Ad-free", "Basic bookmarks (max 10)").
  *     The cards are what a reader is actually shown, so the cards win here.
+ *
+ * ⚠️ A "No" in the free column means the line is not on that plan's card, which
+ * is not the same as verified absence — an earlier version of this table said
+ * Ask AI was "Not included" on free purely because the card does not list it,
+ * and the app disagreed. Check the app before turning an omission into a No.
  */
 export const COMPARISON = [
   {
@@ -39,12 +51,12 @@ export const COMPARISON = [
   {
     icon: 'forum',
     feature: 'Ask AI',
-    free: 'Not included',
+    free: '10 questions per book',
     premium: '10 chats',
-    pro: 'Full experience',
-    freeHas: false,
+    pro: 'Unlimited',
+    freeHas: 'partial',
     premiumHas: 'partial',
-    note: 'Only Pro removes the monthly chat cap.',
+    note: 'The count is per book. Only the Pro tier shows "Unlimited" in the app.',
   },
   {
     icon: 'headphones',

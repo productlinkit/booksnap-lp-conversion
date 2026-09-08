@@ -142,7 +142,7 @@ export default function LibraryPreview() {
             className="animate-float-3 aspect-[415/900] w-full"
             style={{ boxShadow: '0 26px 60px rgba(0,54,37,0.30)' }}
           >
-            <AskAiChat variant="premium" />
+            <AskAiChat variant="open" />
           </Phone>
           <figcaption className="mt-3 flex w-full flex-col items-center">
             <PlanTag premium />
