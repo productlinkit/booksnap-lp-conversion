@@ -178,30 +178,31 @@ export default function Comparison() {
                   </tr>
                 ))}
                 <tr style={{ borderTop: '1px solid rgba(0,54,37,0.09)' }}>
-                  {/* Not an empty cell: the reassurance sits opposite the button
-                      it belongs to, instead of leaving a void under the table. */}
-                  <td className="py-5 pr-5 align-middle text-right">
-                    <span
-                      className="inline-flex items-center gap-1.5 text-[13px]"
-                      style={{ color: 'var(--color-on-surface-variant)' }}
-                    >
-                      <Icon
-                        name="check_circle"
-                        className="text-[16px]"
-                        style={{ color: 'var(--color-primary-container)' }}
-                      />
-                      {CTA.reassurance}
-                    </span>
+                  {/* One cell across the table rather than one inside the
+                      Premium column: at 26% that column gave the button 184px
+                      for 199px of label, so the text was clipped. Full width
+                      here, the way the plan cards do it. */}
+                  <td colSpan={4} className="px-4 pb-1 pt-6 lg:px-5">
+                    <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
+                      <span
+                        className="inline-flex items-center gap-1.5 text-[13px]"
+                        style={{ color: 'var(--color-on-surface-variant)' }}
+                      >
+                        <Icon
+                          name="check_circle"
+                          className="text-[16px]"
+                          style={{ color: 'var(--color-primary-container)' }}
+                        />
+                        {CTA.reassurance}
+                      </span>
+                      {/* shrink-0: CtaButton carries `max-w-full`, so as a flex item it
+                          squeezed below its label rather than wrapping to its own line. */}
+                      <CtaButton location="compare" size="lg" className="cta-sheen shrink-0 px-8">
+                        <Icon name="lock_open" className="text-[19px]" />
+                        {CTA.pricing}
+                      </CtaButton>
+                    </div>
                   </td>
-                  <td className="rounded-b-[24px] px-4 pb-5 pt-5 lg:px-5" style={{ backgroundColor: PREMIUM_BG }}>
-                    <CtaButton
-                      location="compare"
-                      className="cta-sheen w-full whitespace-nowrap px-3 text-[13.5px] lg:px-5 lg:text-sm"
-                    >
-                      {CTA.pricing}
-                    </CtaButton>
-                  </td>
-                  <td />
                 </tr>
               </tbody>
             </table>
