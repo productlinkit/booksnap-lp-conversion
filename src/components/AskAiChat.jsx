@@ -31,13 +31,24 @@ import { Icon } from './primitives'
  * directly, which is exactly what the screenshot showed.
  */
 
-const BOOK = 'The Magic Of Mindful Self-Awareness'
+/**
+ * The book the mock is scoped to.
+ *
+ * It was the title from the app's own capture, whose header art is a different
+ * book entirely — an inconsistency in that screenshot, which made the cropped
+ * thumbnail look broken here. This uses a real catalogue title with the cover
+ * this project already ships, so the header holds together.
+ *
+ * The questions are the app's own suggested prompts. The answers describe what
+ * the book actually says rather than reproducing a captured response.
+ */
+const BOOK = { title: 'Atomic Habits', author: 'James Clear', cover: '/covers/atomic-habits.jpg' }
 const Q1 = 'What are the main ideas of this book?'
 const A1 =
-  'Great question about "The Power of Illusion"! The book explains how mindful self-awareness helps you understand your thoughts and emotions, stay present, break automatic reactions, and live with more clarity and inner peace.'
+  'Four laws of behaviour change: make it obvious, make it attractive, make it easy, make it satisfying. Each one inverts for a habit you want to break — invisible, unattractive, difficult, unsatisfying.'
 const Q2 = 'Can you summarize the key takeaways?'
 const A2 =
-  'In short: notice the thought before you act on it, name what you are feeling, and give the reaction a beat to pass. Do that often enough and the pause becomes the habit.'
+  'Habits compound: 1% better every day is roughly 37x over a year. Build the system rather than chase the goal, and aim at becoming the kind of person who does the thing.'
 
 /** Phase order, with how long each holds before the next one begins. */
 const SHARED = [
@@ -138,10 +149,10 @@ export default function AskAiChat({ variant = 'free' }) {
       {/* Header — the book, and the counter this whole page is about. */}
       <div className="flex items-center gap-2 rounded-b-2xl bg-white px-3 py-2.5">
         <Icon name="arrow_back" className="shrink-0 text-[15px]" style={{ color: '#101512' }} />
-        <img src="/app/cover-thumb.png" alt="" className="h-[34px] w-[21px] shrink-0 rounded-[3px] object-cover" />
+        <img src={BOOK.cover} alt="" className="h-[34px] w-[22px] shrink-0 rounded-[3px] object-cover" />
         <span className="min-w-0 flex-1 leading-tight">
           <span className="line-clamp-2 text-[10.5px] font-bold" style={{ color: '#101512' }}>
-            {BOOK}
+            {BOOK.title}
           </span>
           {variant === 'free' ? (
             <span className="mt-0.5 block text-[9.5px] font-semibold" style={{ color: '#d3392f' }}>
@@ -155,7 +166,7 @@ export default function AskAiChat({ variant = 'free' }) {
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col justify-end gap-2 overflow-hidden px-3 py-3">
+      <div className="flex min-h-0 flex-1 flex-col justify-end gap-2 overflow-hidden px-3 py-3">
         {showQ1 && <Bubble from="user">{Q1}</Bubble>}
         {showThinking1 && <Thinking />}
         {showAnswer && <Bubble from="ai">{A1}</Bubble>}

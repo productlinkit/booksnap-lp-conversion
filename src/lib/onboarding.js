@@ -11,18 +11,35 @@
  * what this landing page sells. See the note above `PLANS`.
  */
 
-/** The chips on "What do You Love to Read?". */
+/**
+ * The chips on "What do You Love to Read?".
+ *
+ * All eighteen active categories from
+ * https://be.booksnap.ai/api/v1/categories, in the order that endpoint returns
+ * them. `apiIcon` is the icon filename it ships for each one, kept so the real
+ * artwork can replace the Material Symbol later — several categories share a
+ * file there (Adventure and Fiction, Historical and Literary and Biography,
+ * Romance and Drama), so the symbols below differentiate them.
+ */
 export const CATEGORIES = [
-  { id: 'self-improvement', label: 'Self-Improvement', icon: 'self_improvement' },
-  { id: 'fiction', label: 'Fiction', icon: 'rocket_launch' },
-  { id: 'psychology', label: 'Psychology', icon: 'psychology' },
-  { id: 'biography', label: 'Biography', icon: 'history_edu' },
-  { id: 'romance', label: 'Romance', icon: 'favorite' },
-  { id: 'philosophical', label: 'Philosophical', icon: 'cloud' },
-  { id: 'sci-fi', label: 'Sci-Fi', icon: 'satellite_alt' },
-  { id: 'fantasy', label: 'Fantasy/Myth', icon: 'auto_awesome' },
-  { id: 'crime', label: 'Crime/Thriller', icon: 'local_police' },
-  { id: 'business', label: 'Business Development', icon: 'work' },
+  { id: 'non-fiction', label: 'Non-fiction', icon: 'menu_book', apiIcon: 'icon-self improvement.png' },
+  { id: 'adventure', label: 'Adventure', icon: 'explore', apiIcon: 'icon-fiction.png' },
+  { id: 'fiction', label: 'Fiction', icon: 'rocket_launch', apiIcon: 'icon-fiction.png' },
+  { id: 'psychology', label: 'Psychology', icon: 'psychology', apiIcon: 'icon-brain.png' },
+  { id: 'biography', label: 'Biography', icon: 'history_edu', apiIcon: 'icon-biography.png' },
+  { id: 'historical', label: 'Historical', icon: 'account_balance', apiIcon: 'icon-biography.png' },
+  { id: 'romance', label: 'Romance', icon: 'favorite', apiIcon: 'icon-love.png' },
+  { id: 'philosophical', label: 'Philosophical', icon: 'cloud', apiIcon: 'icon-philosopichal.png' },
+  { id: 'sci-fi', label: 'Sci-Fi', icon: 'satellite_alt', apiIcon: 'icon-ufo.png' },
+  { id: 'fantasy', label: 'Fantasy/Myth', icon: 'auto_awesome', apiIcon: 'icon-magic hat.png' },
+  { id: 'drama', label: 'Drama', icon: 'theater_comedy', apiIcon: 'icon-love.png' },
+  { id: 'business', label: 'Business Development', icon: 'work', apiIcon: 'icon-business.png' },
+  { id: 'crime', label: 'Crime/Thriller', icon: 'local_police', apiIcon: 'icon-handcuffs.png' },
+  { id: 'literary', label: 'Literary', icon: 'edit_note', apiIcon: 'icon-biography.png' },
+  { id: 'self-improvement', label: 'Self-Improvement', icon: 'self_improvement', apiIcon: 'icon-self improvement.png' },
+  { id: 'contemporary', label: 'Contemporary', icon: 'today', apiIcon: 'icon-self improvement.png' },
+  { id: 'post-apocalyptic', label: 'Post-apocalyptic', icon: 'landscape', apiIcon: 'icon-fiction.png' },
+  { id: 'dystopian', label: 'Dystopian', icon: 'visibility_off', apiIcon: 'icon-philosopichal.png' },
 ]
 
 /** The rows on "Set Your Reading Vibe". */
