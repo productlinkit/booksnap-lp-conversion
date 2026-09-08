@@ -177,7 +177,7 @@ export default function Hero() {
               location="hero-compare"
               className="w-full whitespace-nowrap sm:w-auto"
             >
-              See what&rsquo;s locked
+              See the limits
             </CtaButton>
           </div>
 

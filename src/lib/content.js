@@ -1,5 +1,5 @@
 export const NAV_LINKS = [
-  { label: "What's locked", href: '#compare' },
+  { label: 'The limits', href: '#compare' },
   { label: 'Plans', href: '#pricing' },
   { label: 'Ask AI', href: '#ask-ai' },
   { label: 'Reviews', href: '#reviews' },
@@ -35,10 +35,15 @@ export const NAV_LINKS = [
  *     and they settle the summary count at 500+, not the 50+ a pricing mockup
  *     showed.
  *
- * ⚠️ A "No" in the free column means the line is not on that plan's card, which
- * is not the same as verified absence — an earlier version of this table said
- * Ask AI was "Not included" on free purely because the card does not list it,
- * and the app disagreed. Check the app before turning an omission into a No.
+ * ⚠️ THE FREE COLUMN DESCRIBES LIMITS, NOT ABSENCES. Per the product owner,
+ * everything is present on the free plan — it is capped, not withheld. Two
+ * rows here said "No" purely because the line is missing from the free plan's
+ * card, and both were wrong: Ask AI is on free with a per-book counter, and
+ * recommendations are limited rather than absent. So this column now reads
+ * "Limited", "Preview", "10 questions per book", "On release".
+ *
+ * Do not turn an omission from a marketing card into a "No" again. If a free
+ * value is genuinely unknown, say what is capped, not that it is missing.
  */
 export const COMPARISON = [
   {
@@ -63,7 +68,7 @@ export const COMPARISON = [
   {
     icon: 'headphones',
     feature: 'Text and audiobook',
-    free: 'Preview only',
+    free: 'Preview',
     premium: 'Full access',
     pro: 'Full access',
     freeHas: 'partial',
@@ -72,21 +77,21 @@ export const COMPARISON = [
   {
     icon: 'auto_awesome',
     feature: 'AI recommendations',
-    free: 'No',
-    premium: 'Yes',
+    free: 'Limited',
+    premium: 'Included',
     pro: 'Smarter personalisation',
-    freeHas: false,
+    freeHas: 'partial',
     note: 'Pro tunes them to how you actually read.',
   },
   {
     icon: 'new_releases',
-    feature: 'Early access to new summaries',
-    free: 'No',
-    premium: 'No',
-    pro: 'Yes',
-    freeHas: false,
-    premiumHas: false,
-    note: 'New snaps land in a Pro library first.',
+    feature: 'New summaries',
+    free: 'On release',
+    premium: 'On release',
+    pro: 'Early access',
+    freeHas: 'partial',
+    premiumHas: 'partial',
+    note: 'Everyone gets them; a Pro library gets them first.',
   },
   {
     icon: 'payments',
