@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { CATEGORIES, VIBES, PLANS } from '../lib/onboarding'
 import { HOME_URL } from '../lib/config'
 import { Icon } from './primitives'
+import { ACCENT, DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, GhostButton } from './flow'
 
 /**
  * The sign-up flow reached from every CTA on the landing page.
@@ -17,68 +18,6 @@ import { Icon } from './primitives'
  * The plan step hands off to /checkout, and "Continue Without Plan" goes
  * straight to the app.
  */
-
-const ACCENT = '#379777'
-const DEEP = '#276b54'
-
-/** The two washes behind every step: a green arc above, a yellow one below. */
-function Backdrop() {
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-      <span
-        className="absolute rounded-full"
-        style={{ background: '#f4f9f7', top: '-26%', left: '-46%', width: '186%', paddingBottom: '150%' }}
-      />
-      <span
-        className="absolute rounded-full"
-        style={{ background: '#fdf6d5', bottom: '-38%', right: '-52%', width: '200%', paddingBottom: '160%' }}
-      />
-    </div>
-  )
-}
-
-/**
- * Two lines with the last word in green — the heading shape every step shares.
- * The break is set explicitly rather than left to wrapping, because the app's
- * screens break at a specific word and a fluid wrap would not land there.
- */
-function Heading({ line1, line2, accent, sub }) {
-  return (
-    <>
-      <h1
-        className="font-extrabold"
-        style={{ fontSize: 'clamp(30px, 8vw, 38px)', lineHeight: 1.16, letterSpacing: '-0.02em', color: '#101512' }}
-      >
-        <span className="block">{line1}</span>
-        <span className="block">
-          {line2} <span style={{ color: ACCENT }}>{accent}</span>
-        </span>
-      </h1>
-      <p className="mt-3 text-[14.5px] leading-relaxed" style={{ color: '#3d4744' }}>
-        {sub}
-      </p>
-    </>
-  )
-}
-
-function PrimaryButton({ children, onClick, href, disabled, ...rest }) {
-  const cls =
-    'btn-hover-lift inline-flex min-h-[58px] w-full items-center justify-center rounded-full text-center text-[16px] font-semibold no-underline transition-opacity'
-  const style = { backgroundColor: DEEP, color: '#fff', opacity: disabled ? 0.45 : 1 }
-
-  if (href && !disabled) {
-    return (
-      <a href={href} className={cls} style={style} {...rest}>
-        {children}
-      </a>
-    )
-  }
-  return (
-    <button type="button" onClick={onClick} disabled={disabled} className={cls} style={style} {...rest}>
-      {children}
-    </button>
-  )
-}
 
 /* ---------- Step 1 ---------- */
 function Categories({ picked, toggle }) {
@@ -136,7 +75,7 @@ function Vibes({ picked, toggle }) {
               >
                 {on && <Icon name="check" className="text-[17px]" />}
               </span>
-              <span className="text-[15.5px]" style={{ color: '#101512' }}>
+              <span className="text-[15.5px]" style={{ color: INK }}>
                 {v}
               </span>
             </button>
@@ -164,7 +103,7 @@ function EmailStep({ email, setEmail }) {
         className="w-full rounded-2xl px-4 py-4 text-[16px] outline-none"
         style={{ backgroundColor: '#fff', border: '1.5px solid rgba(39,107,84,0.3)', color: '#101512' }}
       />
-      <span className="text-[13px]" style={{ color: '#3d4744' }}>
+      <span className="text-[13px]" style={{ color: MUTED }}>
         We use it to keep your library and your plan on every device you read on.
       </span>
     </label>
@@ -197,21 +136,21 @@ function PlanCard({ plan, selected, expanded, onSelect, onToggle }) {
           <span className="block text-[21px] font-extrabold" style={{ color: DEEP }}>
             {plan.name}
           </span>
-          <span className="mt-1 block text-[14px]" style={{ color: '#3d4744' }}>
+          <span className="mt-1 block text-[14px]" style={{ color: MUTED }}>
             {plan.tagline}
           </span>
         </span>
         <span className="shrink-0 text-right">
           <span className="flex items-baseline justify-end gap-1">
-            <span className="text-[30px] font-extrabold leading-none" style={{ color: '#101512' }}>
+            <span className="text-[30px] font-extrabold leading-none" style={{ color: INK }}>
               {plan.price}
             </span>
-            <span className="text-[13px] font-semibold" style={{ color: '#3d4744' }}>
+            <span className="text-[13px] font-semibold" style={{ color: MUTED }}>
               {plan.currency}
             </span>
           </span>
           {plan.then && (
-            <span className="mt-1 block text-[13.5px]" style={{ color: '#3d4744' }}>
+            <span className="mt-1 block text-[13.5px]" style={{ color: MUTED }}>
               {plan.then}
             </span>
           )}
@@ -241,7 +180,7 @@ function PlanCard({ plan, selected, expanded, onSelect, onToggle }) {
                 className="mt-px shrink-0 text-[20px]"
                 style={{ color: DEEP, fontVariationSettings: "'FILL' 1" }}
               />
-              <span className="text-[14.5px]" style={{ color: '#101512' }}>
+              <span className="text-[14.5px]" style={{ color: INK }}>
                 {b}
               </span>
             </li>
@@ -302,84 +241,66 @@ export default function Start() {
   }
 
   return (
-    // The washes are sized against their container, so they have to live inside
-    // the column: at full desktop width a 200%-wide circle swallows the screen.
-    // Containing them also gives the flow a phone-shaped panel on desktop,
-    // which is what it is.
-    <div className="flex min-h-[100svh] justify-center" style={{ backgroundColor: '#eaf0ed' }}>
-      <div
-        className="relative flex w-full max-w-[430px] flex-col overflow-hidden"
-        style={{ backgroundColor: '#fff' }}
-      >
-        <Backdrop />
-
-        <div className="relative flex flex-1 flex-col px-6 pb-7 pt-5">
-          {/* Skip goes to the plan step, which is what the reader came for. */}
-          <div className="flex justify-end">
-            {name === 'plans' ? (
-              <span className="h-6" />
-            ) : (
-              <button
-                type="button"
-                onClick={() => setStep(STEPS.length - 1)}
-                className="text-[16px] font-medium underline underline-offset-4"
-                style={{ color: '#101512' }}
-              >
-                Skip
-              </button>
-            )}
-          </div>
-
-          <div className="mt-6">
-            <Heading {...HEADS[name]} />
-          </div>
-
-          <div className="mt-5 flex-1">
-            {name === 'categories' && <Categories picked={cats} toggle={toggleIn(cats, setCats)} />}
-            {name === 'vibes' && <Vibes picked={vibes} toggle={toggleIn(vibes, setVibes)} />}
-            {name === 'email' && <EmailStep email={email} setEmail={setEmail} />}
-            {name === 'plans' && (
-              <div className="flex flex-col gap-4 pt-3">
-                {PLANS.map((p) => (
-                  <PlanCard
-                    key={p.id}
-                    plan={p}
-                    selected={plan === p.id}
-                    expanded={open === p.id}
-                    onSelect={() => setPlan(p.id)}
-                    onToggle={() => setOpen((o) => (o === p.id ? null : p.id))}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-
-          <div className="mt-5 flex flex-col gap-3">
-            {name === 'plans' ? (
-              <>
-                <PrimaryButton href={`/checkout?plan=${plan}`} data-cta="start-plan">
-                  {plan === 'premium' ? 'Start Free Trial' : 'Continue with Pro'}
-                </PrimaryButton>
-                <a
-                  href={HOME_URL}
-                  data-cta="start-no-plan"
-                  className="btn-hover-lift inline-flex min-h-[58px] w-full items-center justify-center rounded-full text-center text-[16px] font-semibold no-underline"
-                  style={{ border: `1.5px solid ${DEEP}`, color: '#101512' }}
-                >
-                  Continue Without Plan
-                </a>
-                <p className="text-center text-[14px]" style={{ color: '#3d4744' }}>
-                  Cancel Anytime before next renewal
-                </p>
-              </>
-            ) : (
-              <PrimaryButton onClick={next} disabled={name === 'email' && !emailOk}>
-                Continue
-              </PrimaryButton>
-            )}
-          </div>
-        </div>
+    <FlowShell>
+      {/* Skip goes to the plan step, which is what the reader came for. */}
+      <div className="flex justify-end">
+        {name === 'plans' ? (
+          <span className="h-6" />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setStep(STEPS.length - 1)}
+            className="text-[16px] font-medium underline underline-offset-4"
+            style={{ color: INK }}
+          >
+            Skip
+          </button>
+        )}
       </div>
-    </div>
+
+      <div className="mt-6">
+        <Heading {...HEADS[name]} />
+      </div>
+
+      <div className="mt-5 flex-1">
+        {name === 'categories' && <Categories picked={cats} toggle={toggleIn(cats, setCats)} />}
+        {name === 'vibes' && <Vibes picked={vibes} toggle={toggleIn(vibes, setVibes)} />}
+        {name === 'email' && <EmailStep email={email} setEmail={setEmail} />}
+        {name === 'plans' && (
+          <div className="flex flex-col gap-4 pt-3">
+            {PLANS.map((p) => (
+              <PlanCard
+                key={p.id}
+                plan={p}
+                selected={plan === p.id}
+                expanded={open === p.id}
+                onSelect={() => setPlan(p.id)}
+                onToggle={() => setOpen((o) => (o === p.id ? null : p.id))}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      <div className="mt-5 flex flex-col gap-3">
+        {name === 'plans' ? (
+          <>
+            <PrimaryButton href={`/checkout?plan=${plan}`} data-cta="start-plan">
+              {plan === 'premium' ? 'Start Free Trial' : 'Continue with Pro'}
+            </PrimaryButton>
+            <GhostButton href={HOME_URL} data-cta="start-no-plan">
+              Continue Without Plan
+            </GhostButton>
+            <p className="text-center text-[14px]" style={{ color: MUTED }}>
+              Cancel Anytime before next renewal
+            </p>
+          </>
+        ) : (
+          <PrimaryButton onClick={next} disabled={name === 'email' && !emailOk}>
+            Continue
+          </PrimaryButton>
+        )}
+      </div>
+    </FlowShell>
   )
 }

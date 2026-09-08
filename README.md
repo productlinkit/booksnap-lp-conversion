@@ -29,6 +29,11 @@ deep-linked or refreshed on any host, and costs no routing dependency:
 The click path is `/` → `/start` → `/checkout` → `apps.booksnap.ai/home`, or
 `/start` → the app directly via "Continue Without Plan".
 
+Both flow pages are dressed by `src/components/flow.jsx` — the phone-width
+panel, the two washes, the two-line heading with its last word in green, the
+pill buttons — so the checkout is the last screen of the same flow rather than
+a page in the landing page's clothes.
+
 `/start` rebuilds the app's own onboarding — categories, reading vibe, plan —
 with an email step added in the middle, so a reader arriving from this page
 meets the flow they would have met in the app. Colours are sampled from the
@@ -67,6 +72,7 @@ src/
 │   ├── LibraryPreview.jsx  the blocked ⇄ running phone pair in the hero
 │   ├── Checkout.jsx        the checkout preview (no payment is taken)
 │   ├── Start.jsx           the four-step sign-up flow
+│   ├── flow.jsx            shell shared by Start and Checkout
 │   ├── Comparison.jsx      Free vs Premium (table ≥ md, stacked cards below)
 │   ├── Pricing.jsx         monthly vs annual, annual recommended
 │   ├── AskAI.jsx           Ask AI deep dive + the real Ask AI screen

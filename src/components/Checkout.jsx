@@ -1,18 +1,20 @@
 import { PLANS } from '../lib/onboarding'
-import { HOME_URL, PLANS_URL, CTA } from '../lib/config'
-import { TRUST } from '../lib/content'
-import { Blob, Icon } from './primitives'
+import { HOME_URL, PLANS_URL } from '../lib/config'
+import { Icon } from './primitives'
+import { DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, TopLink } from './flow'
 
 /**
- * The checkout preview.
+ * The last screen of the flow, in the same clothes as the ones before it:
+ * phone-width panel, the two washes, a two-line heading with its last word in
+ * green, one pill button at the bottom.
  *
- * ⚠️ No payment is taken here and none can be. The visible "preview only"
- * notice was removed on request, but the card fields are still `readOnly` with
- * sample values, nothing is bound to state, and the page makes no network call
- * of any kind. Keep it that way until there is a real integration: a checkout
- * that accepts typing gets given real card numbers by real people, and this
- * project has no backend, no Stripe key and no session to hold them safely.
- * Inert fields mean no card data can be entered at all, so nothing can leak.
+ * ⚠️ No payment is taken here and none can be. The card fields are `readOnly`
+ * with sample values, nothing is bound to state, and the page makes no network
+ * call of any kind. Keep it that way until there is a real integration: a
+ * checkout that accepts typing gets given real card numbers by real people,
+ * and this project has no backend, no Stripe key and no session to hold them
+ * safely. Inert fields mean no card data can be entered at all, so none can
+ * leak.
  *
  * Real payment lives in the app, behind a signed-in session, and the button
  * hands off to it. To take money here instead needs Stripe Elements, the
@@ -20,19 +22,22 @@ import { Blob, Icon } from './primitives'
  * different piece of work, not a few edits to this file.
  */
 
-/** A card field: looks like the real thing, accepts nothing. */
-function Field({ label, value, className = '', icon }) {
+/** The plan chosen back in /start, read off the query string. */
+function chosenPlan() {
+  const id = new URLSearchParams(window.location.search).get('plan')
+  return PLANS.find((p) => p.id === id) || PLANS[0]
+}
+
+/** A card field: dressed like the flow's email input, accepts nothing. */
+function Field({ label, value, icon, className = '' }) {
   return (
     <label className={`flex flex-col gap-1.5 ${className}`}>
-      <span className="text-[12.5px] font-bold" style={{ color: 'var(--color-primary)' }}>
+      <span className="text-[13px] font-bold" style={{ color: DEEP }}>
         {label}
       </span>
       <span
-        className="flex items-center gap-2 rounded-2xl px-3.5 py-3"
-        style={{
-          backgroundColor: 'var(--color-surface-container)',
-          border: '1px solid rgba(0,54,37,0.08)',
-        }}
+        className="flex items-center gap-2 rounded-2xl px-4 py-3.5"
+        style={{ backgroundColor: '#fff', border: '1.5px solid rgba(39,107,84,0.3)' }}
       >
         <input
           type="text"
@@ -40,212 +45,110 @@ function Field({ label, value, className = '', icon }) {
           readOnly
           tabIndex={-1}
           autoComplete="off"
-          className="w-full cursor-default bg-transparent text-[14.5px] outline-none"
-          style={{ color: 'var(--color-on-surface-variant)' }}
+          className="w-full cursor-default bg-transparent text-[15.5px] outline-none"
+          style={{ color: INK }}
         />
-        {icon && <Icon name={icon} className="shrink-0 text-[18px]" style={{ color: 'var(--color-outline-variant)' }} />}
+        {icon && <Icon name={icon} className="shrink-0 text-[18px]" style={{ color: 'rgba(39,107,84,0.45)' }} />}
       </span>
     </label>
   )
 }
 
-/** The plan chosen back in /start, read off the query string. */
-function chosenPlan() {
-  const id = new URLSearchParams(window.location.search).get('plan')
-  return PLANS.find((p) => p.id === id) || PLANS[0]
-}
-
 export default function Checkout() {
   const plan = chosenPlan()
-  const dueToday = plan.price
 
   return (
-    <div className="relative min-h-full overflow-x-clip pb-16">
-      <Blob className="-left-24 top-0 h-72 w-72" color="var(--color-secondary-container)" opacity={0.35} />
-      <Blob className="-right-24 top-40 h-72 w-72" color="var(--color-tertiary-fixed)" opacity={0.3} />
+    <FlowShell>
+      <TopLink href="/start">Back</TopLink>
 
-      <header className="relative mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-6 sm:px-8">
-        <a href="/" className="flex items-center gap-2.5 no-underline">
-          <img src="/booksnap-logo.png" alt="BookSnap" className="h-6 w-auto sm:h-7" />
-        </a>
-        <a
-          href="/start"
-          className="flex items-center gap-1.5 text-[13.5px] font-semibold no-underline transition-opacity hover:opacity-70"
-          style={{ color: 'var(--color-on-surface-variant)' }}
+      <div className="mt-6">
+        <Heading
+          line1="One Last Step to"
+          line2="Unlimited"
+          accent="Reading"
+          sub={
+            plan.badge
+              ? 'Your first 3 days are free. Cancel before they end and you are not charged.'
+              : `${plan.name} — ${plan.tagline}`
+          }
+        />
+      </div>
+
+      <div className="mt-5 flex flex-1 flex-col gap-4">
+        {/* What was chosen back in /start, in the same card shape it was chosen in. */}
+        <div
+          className="rounded-[20px] p-4"
+          style={{ backgroundColor: '#fff', boxShadow: '0 6px 20px rgba(16,21,18,0.06)' }}
         >
-          <Icon name="arrow_back" className="text-[17px]" />
-          Back
-        </a>
-      </header>
-
-      <main className="relative mx-auto max-w-5xl px-4 sm:px-8">
-        <h1 className="rsp-section-h2 font-extrabold" style={{ color: 'var(--color-primary)' }}>
-          Confirm your upgrade.
-        </h1>
-        <p className="rsp-section-p mt-2 max-w-xl" style={{ color: 'var(--color-on-surface-variant)' }}>
-          {plan.badge
-            ? `Your first 3 days are free. Cancel before they end and you are not charged.`
-            : `${plan.name} — ${plan.tagline}`}
-        </p>
-
-        <div className="mt-6 grid grid-cols-1 items-start gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.86fr)] lg:gap-6">
-          {/* ---------- Payment details ---------- */}
-          <section
-            className="rounded-[28px] p-5 sm:p-6"
-            style={{
-              backgroundColor: 'var(--color-surface-lowest)',
-              border: '1px solid rgba(0,54,37,0.07)',
-              boxShadow: '0 14px 40px rgba(0,54,37,0.07)',
-            }}
-            aria-label="Payment details"
-          >
-            <h2 className="rsp-card-h3 font-bold" style={{ color: 'var(--color-primary)' }}>
-              Payment details
-            </h2>
-
-            <div className="mt-5 flex flex-col gap-4">
-              <Field label="Card number" value="4242 4242 4242 4242" icon="credit_card" />
-              <div className="grid grid-cols-2 gap-4">
-                <Field label="Expiry" value="04 / 28" />
-                <Field label="CVC" value="•••" icon="lock" />
-              </div>
-              <Field label="Name on card" value="Your name" />
-              <Field label="Country" value="Indonesia" icon="expand_more" />
-            </div>
-          </section>
-
-          {/* ---------- What was chosen back in /start ---------- */}
-          <section
-            className="rounded-[28px] p-5 sm:p-6"
-            style={{
-              backgroundColor: 'var(--color-surface-lowest)',
-              border: '1px solid rgba(0,54,37,0.07)',
-              boxShadow: '0 14px 40px rgba(0,54,37,0.07)',
-            }}
-            aria-label="Your plan"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <h2 className="rsp-card-h3 font-bold" style={{ color: 'var(--color-primary)' }}>
+          <div className="flex items-start justify-between gap-3">
+            <span className="min-w-0">
+              <span className="block text-[19px] font-extrabold" style={{ color: DEEP }}>
                 {plan.name}
-              </h2>
-              {plan.badge && (
-                <span
-                  className="shrink-0 rounded-full px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-[0.07em]"
-                  style={{ backgroundColor: 'var(--color-tertiary-fixed)', color: 'var(--color-tertiary-container)' }}
-                >
-                  {plan.badge}
-                </span>
-              )}
-            </div>
-            <p className="mt-1 text-[13.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-              {plan.tagline}{' '}
-              <a href="/start" className="font-semibold underline" style={{ color: 'var(--color-primary)' }}>
+              </span>
+              <a href="/start" className="mt-0.5 block text-[13.5px] underline" style={{ color: MUTED }}>
                 Change plan
               </a>
-            </p>
+            </span>
+            <span className="shrink-0 text-right">
+              <span className="flex items-baseline justify-end gap-1">
+                <span className="text-[28px] font-extrabold leading-none" style={{ color: INK }}>
+                  {plan.price}
+                </span>
+                <span className="text-[13px] font-semibold" style={{ color: MUTED }}>
+                  {plan.currency}
+                </span>
+              </span>
+              <span className="mt-1 block text-[13px]" style={{ color: MUTED }}>
+                {plan.then ? plan.then : 'per month'}
+              </span>
+            </span>
+          </div>
 
-            <ul className="mt-5 flex flex-col gap-2">
-              {plan.benefits.map((benefit) => (
-                <li key={benefit} className="flex items-start gap-2">
-                  <Icon
-                    name="check_circle"
-                    className="mt-px shrink-0 text-[16px]"
-                    style={{ color: 'var(--color-primary-container)', fontVariationSettings: "'FILL' 1" }}
-                  />
-                  <span className="text-[13.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-                    {benefit}
-                  </span>
-                </li>
-              ))}
-            </ul>
-
-            <dl
-              className="mt-5 flex flex-col gap-2 pt-4 text-[13.5px]"
-              style={{ borderTop: '1px solid rgba(0,54,37,0.08)' }}
-            >
-              <div className="flex items-baseline justify-between gap-3">
-                <dt style={{ color: 'var(--color-on-surface-variant)' }}>{plan.name}</dt>
-                <dd className="font-semibold" style={{ color: 'var(--color-primary)' }}>
-                  {plan.then ? plan.then.replace('Then ', '') : `${plan.price} / month`}
-                </dd>
-              </div>
-              <div
-                className="mt-2 flex items-baseline justify-between gap-3 pt-3"
-                style={{ borderTop: '1px solid rgba(0,54,37,0.08)' }}
-              >
-                <dt className="text-[15px] font-bold" style={{ color: 'var(--color-primary)' }}>
-                  Due today
-                </dt>
-                <dd className="text-[24px] font-extrabold leading-none" style={{ color: 'var(--color-primary)' }}>
-                  {dueToday}
-                </dd>
-              </div>
-            </dl>
-
-            {/* Not a submit button: there is no form to submit. It is the
-                hand-off to the app, where the real checkout lives. */}
-            <a
-              href={HOME_URL}
-              data-cta="checkout-continue"
-              className="btn-hover-lift cta-sheen mt-5 inline-flex min-h-[54px] w-full items-center justify-center gap-2 rounded-full text-center text-[15px] font-semibold no-underline"
-              style={{ backgroundColor: 'var(--color-tertiary-fixed)', color: 'var(--color-primary-container)' }}
-            >
-              <Icon name="lock_open" className="text-[19px]" />
-              Continue to BookSnap
-            </a>
-
+          {plan.badge && (
             <p
-              className="mt-3 flex items-center justify-center gap-1.5 text-center text-[12.5px]"
-              style={{ color: 'var(--color-on-surface-variant)' }}
+              className="mt-3 flex items-center gap-2 rounded-xl px-3 py-2 text-[13px] font-semibold"
+              style={{ backgroundColor: '#fdf6d5', color: '#7a5c05' }}
             >
-              <Icon name="check_circle" className="text-[15px]" />
-              {CTA.reassurance}
+              <Icon name="schedule" className="shrink-0 text-[17px]" />
+              {plan.badge} · nothing due today
             </p>
-
-            <p className="mt-2 text-center text-[12px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-              Prefer to pick your plan in the app?{' '}
-              <a
-                href={PLANS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold underline"
-                style={{ color: 'var(--color-primary)' }}
-              >
-                Open plans there
-              </a>
-              .
-            </p>
-          </section>
+          )}
         </div>
 
-        <ul
-          className="mt-6 grid grid-cols-1 gap-px overflow-hidden rounded-[24px] sm:grid-cols-2 lg:grid-cols-4"
-          style={{ backgroundColor: 'rgba(0,54,37,0.09)' }}
-        >
-          {TRUST.map((item) => (
-            <li
-              key={item.label}
-              className="flex items-center gap-3 px-4 py-4"
-              style={{ backgroundColor: 'var(--color-surface-lowest)' }}
-            >
-              <span
-                className="grid h-9 w-9 shrink-0 place-items-center rounded-full"
-                style={{ backgroundColor: 'var(--color-secondary-container)', color: 'var(--color-primary)' }}
-              >
-                <Icon name={item.icon} className="text-[18px]" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-[13px] font-bold" style={{ color: 'var(--color-primary)' }}>
-                  {item.label}
-                </span>
-                <span className="block text-[11.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
-                  {item.sub}
-                </span>
-              </span>
-            </li>
-          ))}
-        </ul>
-      </main>
-    </div>
+        <Field label="Card number" value="4242 4242 4242 4242" icon="credit_card" />
+        <div className="grid grid-cols-2 gap-3">
+          <Field label="Expiry" value="04 / 28" />
+          <Field label="CVC" value="•••" icon="lock" />
+        </div>
+        <Field label="Name on card" value="Your name" />
+
+        <p className="flex items-center gap-2 text-[13px]" style={{ color: MUTED }}>
+          <Icon name="lock" className="shrink-0 text-[16px]" style={{ color: DEEP }} />
+          Secure payment, processed by Stripe.
+        </p>
+      </div>
+
+      <div className="mt-5 flex flex-col gap-3">
+        <PrimaryButton href={HOME_URL} data-cta="checkout-continue">
+          Continue to BookSnap
+        </PrimaryButton>
+        <p className="text-center text-[14px]" style={{ color: MUTED }}>
+          Cancel Anytime before next renewal
+        </p>
+        <p className="text-center text-[13px]" style={{ color: MUTED }}>
+          Prefer to pick your plan in the app?{' '}
+          <a
+            href={PLANS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-semibold underline"
+            style={{ color: DEEP }}
+          >
+            Open plans there
+          </a>
+          .
+        </p>
+      </div>
+    </FlowShell>
   )
 }
