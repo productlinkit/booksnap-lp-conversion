@@ -23,11 +23,18 @@ export const APP_URL = 'https://apps.booksnap.ai/'
  */
 export const UPGRADE_URL = '/start'
 
+/**
+ * The app's routes are language-prefixed: its router carries a `/:lang/*`
+ * catch-all, and the unprefixed paths are redirects into it. Linking at the
+ * prefixed form skips that redirect hop.
+ */
+const LANG = 'en'
+
 /** The app's own plan picker, where real payment actually happens. */
-export const PLANS_URL = `${APP_URL}profile/subscription/plans`
+export const PLANS_URL = `${APP_URL}${LANG}/profile/subscription/plans`
 
 /** Where the checkout hands off — the app's home screen, per its router. */
-export const HOME_URL = `${APP_URL}home`
+export const HOME_URL = `${APP_URL}${LANG}/home`
 
 /**
  * The free-tier usage state this page is written against.

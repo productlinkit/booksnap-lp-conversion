@@ -15,17 +15,26 @@ export const DEEP = '#276b54'
 export const INK = '#101512'
 export const MUTED = '#3d4744'
 
-/** The two washes behind every screen: a green arc above, a yellow one below. */
+/**
+ * The two shapes behind every screen.
+ *
+ * These are the app's own overlay PNGs, not CSS circles standing in for them —
+ * `/auth/overlay-1.png` top-right and `/auth/overlay-2.png` bottom-left, the
+ * same files its sign-in screen loads, sliding in from either side on the same
+ * 0.8s ease-out. Decorative, so they carry no alt text.
+ */
 export function Backdrop() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 overflow-hidden">
-      <span
-        className="absolute rounded-full"
-        style={{ background: '#f4f9f7', top: '-26%', left: '-46%', width: '186%', paddingBottom: '150%' }}
+      <img
+        src="/auth/overlay-1.png"
+        alt=""
+        className="animate-flow-left absolute right-0 top-0 h-auto w-full object-contain"
       />
-      <span
-        className="absolute rounded-full"
-        style={{ background: '#fdf6d5', bottom: '-38%', right: '-52%', width: '200%', paddingBottom: '160%' }}
+      <img
+        src="/auth/overlay-2.png"
+        alt=""
+        className="animate-flow-right absolute bottom-0 left-0 h-auto w-full object-contain"
       />
     </div>
   )
@@ -81,7 +90,8 @@ const BTN =
   'btn-hover-lift inline-flex min-h-[58px] w-full items-center justify-center gap-2 rounded-full text-center text-[16px] font-semibold no-underline transition-opacity'
 
 export function PrimaryButton({ children, onClick, href, disabled, ...rest }) {
-  const style = { backgroundColor: DEEP, color: '#fff', opacity: disabled ? 0.45 : 1 }
+  // #828486 is the app's own disabled fill, not a faded version of the green.
+  const style = { backgroundColor: disabled ? '#828486' : DEEP, color: '#fff' }
   if (href && !disabled) {
     return (
       <a href={href} className={BTN} style={style} {...rest}>
@@ -117,5 +127,38 @@ export function TopLink({ href, children }) {
         {children}
       </a>
     </div>
+  )
+}
+
+/**
+ * A field in the app's shape: the label sits inside the box above the value,
+ * not above the box. `readOnly` fields render the same but take no input.
+ */
+export function Field({ label, value, onChange, placeholder, type = 'text', icon, trailing, readOnly }) {
+  return (
+    <label
+      className="flex items-center gap-3 rounded-2xl px-4 py-2.5"
+      style={{ backgroundColor: 'rgba(255,255,255,0.72)', border: '1.5px solid rgba(39,107,84,0.22)' }}
+    >
+      {icon && <Icon name={icon} className="shrink-0 text-[20px]" style={{ color: 'rgba(16,21,18,0.45)' }} />}
+      <span className="min-w-0 flex-1">
+        <span className="block text-[12.5px]" style={{ color: MUTED }}>
+          {label}
+        </span>
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          readOnly={readOnly}
+          tabIndex={readOnly ? -1 : undefined}
+          autoComplete={type === 'email' ? 'email' : 'off'}
+          inputMode={type === 'email' ? 'email' : undefined}
+          className={`w-full bg-transparent text-[16px] outline-none ${readOnly ? 'cursor-default' : ''}`}
+          style={{ color: INK }}
+        />
+      </span>
+      {trailing}
+    </label>
   )
 }

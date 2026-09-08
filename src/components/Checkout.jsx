@@ -1,7 +1,7 @@
 import { PLANS } from '../lib/onboarding'
 import { HOME_URL, PLANS_URL } from '../lib/config'
 import { Icon } from './primitives'
-import { DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, TopLink } from './flow'
+import { DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, TopLink, Field } from './flow'
 
 /**
  * The last screen of the flow, in the same clothes as the ones before it:
@@ -26,32 +26,6 @@ import { DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, TopLink } from './
 function chosenPlan() {
   const id = new URLSearchParams(window.location.search).get('plan')
   return PLANS.find((p) => p.id === id) || PLANS[0]
-}
-
-/** A card field: dressed like the flow's email input, accepts nothing. */
-function Field({ label, value, icon, className = '' }) {
-  return (
-    <label className={`flex flex-col gap-1.5 ${className}`}>
-      <span className="text-[13px] font-bold" style={{ color: DEEP }}>
-        {label}
-      </span>
-      <span
-        className="flex items-center gap-2 rounded-2xl px-4 py-3.5"
-        style={{ backgroundColor: '#fff', border: '1.5px solid rgba(39,107,84,0.3)' }}
-      >
-        <input
-          type="text"
-          value={value}
-          readOnly
-          tabIndex={-1}
-          autoComplete="off"
-          className="w-full cursor-default bg-transparent text-[15.5px] outline-none"
-          style={{ color: INK }}
-        />
-        {icon && <Icon name={icon} className="shrink-0 text-[18px]" style={{ color: 'rgba(39,107,84,0.45)' }} />}
-      </span>
-    </label>
-  )
 }
 
 export default function Checkout() {
@@ -115,12 +89,12 @@ export default function Checkout() {
           )}
         </div>
 
-        <Field label="Card number" value="4242 4242 4242 4242" icon="credit_card" />
+        <Field label="Card number" value="4242 4242 4242 4242" icon="credit_card" readOnly />
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Expiry" value="04 / 28" />
-          <Field label="CVC" value="•••" icon="lock" />
+          <Field label="Expiry" value="04 / 28" readOnly />
+          <Field label="CVC" value="•••" icon="lock" readOnly />
         </div>
-        <Field label="Name on card" value="Your name" />
+        <Field label="Name on card" value="Your name" readOnly />
 
         <p className="flex items-center gap-2 text-[13px]" style={{ color: MUTED }}>
           <Icon name="lock" className="shrink-0 text-[16px]" style={{ color: DEEP }} />

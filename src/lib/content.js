@@ -1,5 +1,3 @@
-import { USAGE } from './config'
-
 export const NAV_LINKS = [
   { label: "What's locked", href: '#compare' },
   { label: 'Plans', href: '#pricing' },
@@ -8,69 +6,117 @@ export const NAV_LINKS = [
 ]
 
 /**
- * Free vs Premium.
+ * The plan comparison.
  *
- * `free` / `premium` are short enough to survive a 375px phone column without
- * wrapping to three lines; `note` carries the detail the row can't hold.
- * Feature claims are the ones the Premium plan already makes in the
- * catalogue API — nothing here is invented.
+ * ⚠️ SOURCED, NOT WRITTEN. Every value below is transcribed from BookSnap's
+ * own data — the `features` arrays on
+ * https://be.booksnap.ai/api/v1/subscriptions/plans for the Free, Premium and
+ * Pro plans, and the app's plan screen for the two Ask AI lines. An earlier
+ * version of this table was invented ("3 snaps per month", "10 Ask AI per
+ * month" for free) and none of it holds up:
+ *
+ *   - The free plan is not a monthly quota. The API describes it as "Access to
+ *     free books only", "Read & listen with ads", "Basic bookmarks (max 10)",
+ *     "Standard audio quality" — a catalogue and quality restriction, not a
+ *     counter.
+ *   - Premium does not lift the Ask AI cap. The app's Premium card reads
+ *     "Experience with ASK.AI 10 chats monthly"; "Full experience with ASK.AI"
+ *     is a Pro line.
+ *
+ * Which is why there are three columns now. Do not add a row without a source.
  */
 export const COMPARISON = [
   {
-    icon: 'auto_stories',
-    feature: 'Book Snaps',
-    free: `${USAGE.snapsTotal} per month`,
-    premium: 'Unlimited',
+    icon: 'library_books',
+    feature: 'Library access',
+    free: 'Free titles only',
+    premium: 'Every book',
+    pro: 'Every book',
     freeHas: 'partial',
-    note: 'Every summary in the library, as often as you want it.',
+    note: 'Premium unlocks unlimited access to the whole catalogue.',
   },
   {
     icon: 'forum',
-    feature: 'Ask AI questions',
-    free: `${USAGE.askTotal} per month`,
-    premium: 'Unlimited',
+    feature: 'Ask AI',
+    free: '10 chats per month',
+    premium: '10 chats per month',
+    pro: 'Full experience',
     freeHas: 'partial',
-    note: 'Keep asking until the idea actually lands.',
+    premiumHas: 'partial',
+    note: 'Only Pro removes the monthly chat cap.',
+  },
+  {
+    icon: 'block',
+    feature: 'Ads',
+    free: 'Read and listen with ads',
+    premium: 'Ad-free',
+    pro: 'Ad-free',
+    freeHas: false,
+    note: 'Nothing interrupting a snap or its audio.',
   },
   {
     icon: 'download_for_offline',
     feature: 'Offline downloads',
     free: 'No',
     premium: 'Yes',
+    pro: 'Yes',
     freeHas: false,
     note: 'Snaps and audio on the plane, the metro, the treadmill.',
+  },
+  {
+    icon: 'graphic_eq',
+    feature: 'Audio quality',
+    free: 'Standard',
+    premium: 'HD',
+    pro: 'HD',
+    freeHas: 'partial',
+    note: 'Studio-quality narration.',
+  },
+  {
+    icon: 'bookmark',
+    feature: 'Bookmarks',
+    free: '10 max',
+    premium: 'Unlimited',
+    pro: 'Unlimited',
+    freeHas: 'partial',
+    note: 'Keep every passage worth coming back to.',
   },
   {
     icon: 'new_releases',
     feature: 'Early access to new releases',
     free: 'No',
     premium: 'Yes',
+    pro: 'Yes',
     freeHas: false,
     note: 'New snaps land in your library first.',
-  },
-  {
-    icon: 'library_books',
-    feature: 'Library access',
-    free: 'Free titles only',
-    premium: 'The full catalogue',
-    freeHas: 'partial',
-    note: 'Including every Premium-only title.',
-  },
-  {
-    icon: 'graphic_eq',
-    feature: 'HD audio recaps',
-    free: 'Standard',
-    premium: 'HD, ad-free',
-    freeHas: 'partial',
-    note: 'Studio-quality narration with nothing interrupting it.',
   },
   {
     icon: 'devices',
     feature: 'Multi-device sync',
     free: 'No',
     premium: 'Yes',
+    pro: 'Yes',
     freeHas: false,
     note: 'Start on your phone, finish on the web.',
+  },
+  {
+    icon: 'auto_awesome',
+    feature: 'AI recommendations and reading plans',
+    free: 'No',
+    premium: 'No',
+    pro: 'Yes',
+    freeHas: false,
+    premiumHas: false,
+    note: 'Personalised plans, analytics and Super Premium titles.',
+  },
+  {
+    icon: 'support_agent',
+    feature: 'Customer support',
+    free: 'Standard',
+    premium: 'Priority',
+    pro: 'VIP',
+    freeHas: 'partial',
+    note: 'Someone answers, and sooner.',
   },
 ]
 

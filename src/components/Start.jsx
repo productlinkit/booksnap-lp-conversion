@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { CATEGORIES, VIBES, PLANS } from '../lib/onboarding'
 import { HOME_URL } from '../lib/config'
 import { Icon } from './primitives'
-import { ACCENT, DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, GhostButton } from './flow'
+import { ACCENT, DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, GhostButton, Field } from './flow'
 
 /**
  * The sign-up flow reached from every CTA on the landing page.
@@ -22,7 +22,7 @@ import { ACCENT, DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, GhostButto
 /* ---------- Step 1 ---------- */
 function Categories({ picked, toggle }) {
   return (
-    <ul className="flex flex-wrap gap-3">
+    <ul className="flex flex-wrap gap-2.5">
       {CATEGORIES.map((c) => {
         const on = picked.has(c.id)
         return (
@@ -31,14 +31,14 @@ function Categories({ picked, toggle }) {
               type="button"
               onClick={() => toggle(c.id)}
               aria-pressed={on}
-              className="inline-flex items-center gap-2 rounded-full px-4 py-3 text-[14.5px] font-medium transition-all duration-200"
+              className="inline-flex items-center gap-2 rounded-full px-3.5 py-[7px] text-[14px] font-medium transition-all duration-200"
               style={{
                 backgroundColor: on ? DEEP : 'transparent',
                 color: on ? '#fff' : DEEP,
                 border: `1.5px solid ${on ? DEEP : 'rgba(39,107,84,0.45)'}`,
               }}
             >
-              <Icon name={c.icon} className="text-[19px]" />
+              <Icon name={c.icon} className="text-[17px]" />
               {c.label}
             </button>
           </li>
@@ -89,24 +89,19 @@ function Vibes({ picked, toggle }) {
 /* ---------- Step 3 ---------- */
 function EmailStep({ email, setEmail }) {
   return (
-    <label className="flex flex-col gap-2">
-      <span className="text-[13px] font-bold" style={{ color: DEEP }}>
-        Email address
-      </span>
-      <input
+    <div className="flex flex-col gap-2">
+      <Field
+        label="Email"
         type="email"
-        inputMode="email"
-        autoComplete="email"
-        placeholder="you@example.com"
+        icon="mail"
+        placeholder="example@email.com"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
-        className="w-full rounded-2xl px-4 py-4 text-[16px] outline-none"
-        style={{ backgroundColor: '#fff', border: '1.5px solid rgba(39,107,84,0.3)', color: '#101512' }}
       />
       <span className="text-[13px]" style={{ color: MUTED }}>
         We use it to keep your library and your plan on every device you read on.
       </span>
-    </label>
+    </div>
   )
 }
 

@@ -29,13 +29,13 @@ function ValueMark({ value, has }) {
   return <span className="text-[13.5px]">{value}</span>
 }
 
-function PremiumMark({ value }) {
+function PremiumMark({ value, partial }) {
   return (
     <span className="inline-flex items-center gap-1.5 font-bold" style={{ color: 'var(--color-primary)' }}>
       <Icon
-        name="check_circle"
+        name={partial ? 'remove' : 'check_circle'}
         className="shrink-0 text-[17px]"
-        style={{ color: 'var(--color-primary-container)', fontVariationSettings: "'FILL' 1" }}
+        style={{ color: 'var(--color-primary-container)', fontVariationSettings: partial ? undefined : "'FILL' 1" }}
       />
       <span className="text-[13.5px]">{value}</span>
     </span>
@@ -52,8 +52,8 @@ export default function Comparison() {
         <div className="fade-up flex justify-center">
           <SectionHead
             label="What's locked"
-            title="The same app. Without the ceiling."
-            sub="You already know how BookSnap works. Premium simply stops counting."
+            title="The same app. Every book open."
+            sub="Every value here is the plan data BookSnap publishes, not a claim this page invented."
           />
         </div>
 
@@ -70,11 +70,12 @@ export default function Comparison() {
           {/* ---------- md and up: table ---------- */}
           <div className="hidden md:block">
             <table className="w-full border-collapse text-left">
-              <caption className="sr-only">Feature comparison between the Free and Premium plans</caption>
+              <caption className="sr-only">Feature comparison between the Free, Premium and Pro plans</caption>
               <colgroup>
-                <col style={{ width: '40%' }} />
-                <col style={{ width: '23%' }} />
-                <col style={{ width: '37%' }} />
+                <col style={{ width: '36%' }} />
+                <col style={{ width: '19%' }} />
+                <col style={{ width: '26%' }} />
+                <col style={{ width: '19%' }} />
               </colgroup>
               <thead>
                 <tr>
@@ -115,7 +116,18 @@ export default function Comparison() {
                       </span>
                     </span>
                     <span className="mt-1 block text-[12px] font-normal" style={{ color: 'rgba(255,255,255,0.78)' }}>
-                      No limits, no ads
+                      Every book, ad-free
+                    </span>
+                  </th>
+                  <th scope="col" className="px-4 pb-4 align-bottom">
+                    <span className="text-[15px] font-bold" style={{ color: 'var(--color-primary)' }}>
+                      Pro
+                    </span>
+                    <span
+                      className="mt-0.5 block text-[12px] font-normal"
+                      style={{ color: 'var(--color-on-surface-variant)' }}
+                    >
+                      Ask AI without a cap
                     </span>
                   </th>
                 </tr>
@@ -154,14 +166,21 @@ export default function Comparison() {
                       <ValueMark value={row.free} has={row.freeHas} />
                     </td>
                     <td className="px-5 py-4 align-top" style={{ backgroundColor: PREMIUM_BG }}>
-                      <PremiumMark value={row.premium} />
+                      {row.premiumHas === false ? (
+                        <ValueMark value={row.premium} has={false} />
+                      ) : (
+                        <PremiumMark value={row.premium} partial={row.premiumHas === 'partial'} />
+                      )}
+                    </td>
+                    <td className="px-4 py-4 align-top" style={{ color: 'var(--color-on-surface-variant)' }}>
+                      <span className="text-[13.5px]">{row.pro}</span>
                     </td>
                   </tr>
                 ))}
                 <tr style={{ borderTop: '1px solid rgba(0,54,37,0.09)' }}>
                   {/* Not an empty cell: the reassurance sits opposite the button
                       it belongs to, instead of leaving a void under the table. */}
-                  <td colSpan={2} className="py-5 pr-5 align-middle text-right">
+                  <td className="py-5 pr-5 align-middle text-right">
                     <span
                       className="inline-flex items-center gap-1.5 text-[13px]"
                       style={{ color: 'var(--color-on-surface-variant)' }}
@@ -182,6 +201,7 @@ export default function Comparison() {
                       {CTA.pricing}
                     </CtaButton>
                   </td>
+                  <td />
                 </tr>
               </tbody>
             </table>
@@ -212,7 +232,7 @@ export default function Comparison() {
                   </div>
                 </div>
 
-                <div className="mt-3.5 grid grid-cols-2 gap-2">
+                <div className="mt-3.5 grid grid-cols-3 gap-2">
                   <div
                     className="min-w-0 rounded-2xl px-3 py-2.5"
                     style={{ backgroundColor: 'var(--color-surface-container)' }}
@@ -223,7 +243,7 @@ export default function Comparison() {
                     >
                       Free
                     </span>
-                    <span className="mt-1 block text-[13.5px]" style={{ color: 'var(--color-on-surface-variant)' }}>
+                    <span className="mt-1 block text-[13px]" style={{ color: 'var(--color-on-surface-variant)' }}>
                       {row.free}
                     </span>
                   </div>
@@ -236,8 +256,22 @@ export default function Comparison() {
                     >
                       Premium
                     </span>
-                    <span className="mt-1 block text-[13.5px] font-bold" style={{ color: '#fff' }}>
+                    <span className="mt-1 block text-[13px] font-bold" style={{ color: '#fff' }}>
                       {row.premium}
+                    </span>
+                  </div>
+                  <div
+                    className="min-w-0 rounded-2xl px-3 py-2.5"
+                    style={{ backgroundColor: 'rgba(164,244,191,0.30)' }}
+                  >
+                    <span
+                      className="block text-[10.5px] font-bold uppercase tracking-[0.07em]"
+                      style={{ color: 'var(--color-primary)' }}
+                    >
+                      Pro
+                    </span>
+                    <span className="mt-1 block text-[13px]" style={{ color: 'var(--color-primary)' }}>
+                      {row.pro}
                     </span>
                   </div>
                 </div>

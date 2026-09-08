@@ -441,6 +441,22 @@ button:focus-visible,
   to   { transform: translateX(calc(-50% - 8px)); }
 }
 
+/* ---------- Flow backdrop ----------
+   The app draws the two shapes behind its onboarding as PNGs that slide in
+   from either side on mount. Same assets (`public/auth/`), same keyframes and
+   the same 0.8s ease-out the app uses, so the flow arrives the way the app's
+   own screens do rather than sitting there. */
+@keyframes flow-slide-in-left {
+  from { opacity: 0; transform: translateX(-100%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes flow-slide-in-right {
+  from { opacity: 0; transform: translateX(100%); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.animate-flow-left { animation: flow-slide-in-left 0.8s ease-out; }
+.animate-flow-right { animation: flow-slide-in-right 0.8s ease-out; }
+
 /* ---------- Decorative blobs ---------- */
 .blob {
   position: absolute;
@@ -484,6 +500,8 @@ button:focus-visible,
   .animate-float-5,
   .animate-float-main,
   .marquee-track,
-  .meter-full { animation: none !important; }
+  .meter-full,
+  .animate-flow-left,
+  .animate-flow-right { animation: none !important; }
   .cta-sheen::after { display: none; }
 }
