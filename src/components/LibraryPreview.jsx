@@ -1,6 +1,7 @@
 import { USAGE } from '../lib/config'
 import { useInView } from '../lib/hooks'
 import { Blob, Icon, Phone } from './primitives'
+import AskAiChat from './AskAiChat'
 
 /**
  * The hero visual: the same product, twice — the free plan drained and locked,
@@ -8,11 +9,12 @@ import { Blob, Icon, Phone } from './primitives'
  * from booksnap.ai (`public/app/`), so the comparison is the actual app rather
  * than a drawing of it.
  *
- * Both sides are the same Ask AI screen, captured in its two states: blocked,
- * drained and behind a padlock on the left; still running, in full colour, on
- * the right. One screen twice is a sharper argument than two different screens
- * — the reader is looking at their own app on both halves, and the only thing
- * that changed between them is the plan.
+ * Both sides run the same Ask AI conversation live, not as captures: the
+ * question types itself, the answer arrives, and then the two part company —
+ * the free side hits its wall and the app's limit banner drops in, the Premium
+ * side simply answers again. One screen twice is a sharper argument than two
+ * different screens: the reader watches their own app, and the only thing that
+ * differs is the plan.
  *
  * Laid out as a two-column grid rather than overlapping absolute phones: the
  * pair then shrinks with the column all the way to 320px instead of colliding.
@@ -119,12 +121,8 @@ export default function LibraryPreview() {
       <div className="relative grid grid-cols-2 items-end gap-3 sm:gap-5">
         {/* ---------- Free: what the reader is looking at right now ---------- */}
         <figure className="m-0 flex flex-col items-center">
-          <Phone
-            className="animate-float-1 w-full"
-            src="/app/screen-limit.png"
-            alt="BookSnap on the free plan with the monthly limit reached"
-            locked
-          >
+          <Phone className="animate-float-1 aspect-[415/900] w-full" locked>
+            <AskAiChat variant="free" />
             <span
               className="absolute left-1/2 top-1/2 z-[2] grid h-12 w-12 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full sm:h-14 sm:w-14"
               style={{ backgroundColor: 'rgba(252,248,251,0.92)', color: 'var(--color-primary)' }}
@@ -141,11 +139,11 @@ export default function LibraryPreview() {
         {/* ---------- Premium: the same app with the ceiling removed ---------- */}
         <figure className="m-0 flex flex-col items-center">
           <Phone
-            className="animate-float-3 w-full"
-            src="/app/screen-chat.png"
-            alt="Ask AI on Premium: the conversation still running, with suggestions and the composer live"
+            className="animate-float-3 aspect-[415/900] w-full"
             style={{ boxShadow: '0 26px 60px rgba(0,54,37,0.30)' }}
-          />
+          >
+            <AskAiChat variant="premium" />
+          </Phone>
           <figcaption className="mt-3 flex w-full flex-col items-center">
             <PlanTag premium />
             <Meter premium />

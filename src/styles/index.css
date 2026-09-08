@@ -393,10 +393,16 @@ button:focus-visible,
   width: 100%;
   height: auto;
 }
-/* A frame wrapping a live mock has no image to give it height, so the ratio
-   is set on the frame itself and the mock fills it. */
-.phone > *:not(img) {
+/* A frame wrapping a live mock has no image to give it height, so the ratio is
+   set on the frame itself and the screen fills it. Scoped to this one class:
+   as `.phone > *:not(img)` it also stretched the padlock badge in the hero
+   into a full-height white bar. */
+.phone-screen {
   height: 100%;
+}
+/* The locked frame drains a live screen the same way it drains a capture. */
+.phone-locked > .phone-screen {
+  filter: grayscale(1) contrast(0.92) brightness(0.94);
 }
 /* The notch pill, so the frame reads as a device and not a rounded rectangle. */
 .phone::before {

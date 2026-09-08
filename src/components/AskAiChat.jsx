@@ -12,6 +12,13 @@ import { Icon } from './primitives'
  * own "Free limit reached" banner drops in on top. Every line of copy is the
  * one in that capture; only the timing is added.
  *
+ * Two variants, because the hero needs both halves of the argument:
+ *
+ *   - `free` ends at the wall. The counter is spent, and the app's banner
+ *     drops in after the second question.
+ *   - `premium` never hits one. No counter in the header, and the second
+ *     question is answered like the first before the loop restarts.
+ *
  * The loop starts when the frame is scrolled into view and never runs off
  * screen. Under `prefers-reduced-motion` it renders the finished state
  * directly, which is exactly what the screenshot showed.
@@ -22,9 +29,11 @@ const Q1 = 'What are the main ideas of this book?'
 const A1 =
   'Great question about "The Power of Illusion"! The book explains how mindful self-awareness helps you understand your thoughts and emotions, stay present, break automatic reactions, and live with more clarity and inner peace.'
 const Q2 = 'Can you summarize the key takeaways?'
+const A2 =
+  'In short: notice the thought before you act on it, name what you are feeling, and give the reaction a beat to pass. Do that often enough and the pause becomes the habit.'
 
 /** Phase order, with how long each holds before the next one begins. */
-const PHASES = [
+const SHARED = [
   { name: 'idle', ms: 700 },
   { name: 'typeQ1', typing: Q1 },
   { name: 'sentQ1', ms: 450 },
@@ -33,10 +42,12 @@ const PHASES = [
   { name: 'typeQ2', typing: Q2 },
   { name: 'sentQ2', ms: 450 },
   { name: 'thinking2', ms: 1300 },
-  { name: 'limit', ms: 4200 },
 ]
+const SCRIPTS = {
+  free: [...SHARED, { name: 'limit', ms: 4200 }],
+  premium: [...SHARED, { name: 'answer2', ms: 4200 }],
+}
 const CHAR_MS = 32
-const LAST = PHASES.length - 1
 
 function Bubble({ from, children, delay = 0 }) {
   const user = from === 'user'
@@ -58,13 +69,16 @@ function Bubble({ from, children, delay = 0 }) {
   )
 }
 
-export default function AskAiChat() {
+export default function AskAiChat({ variant = 'free' }) {
   const [ref, inView] = useInView(0.4)
   const reduced = usePrefersReducedMotion()
   const [phase, setPhase] = useState(0)
   // Tagged with the phase it belongs to, so a phase change clears the composer
   // by itself — no reset write on every effect run.
   const [typing, setTyping] = useState({ phase: -1, text: '' })
+
+  const PHASES = SCRIPTS[variant]
+  const LAST = PHASES.length - 1
 
   // One timer per phase: typing phases tick per character, the rest just hold.
   useEffect(() => {
@@ -87,7 +101,7 @@ export default function AskAiChat() {
 
     const id = setTimeout(advance, step.ms)
     return () => clearTimeout(id)
-  }, [phase, inView, reduced])
+  }, [phase, inView, reduced, PHASES, LAST])
 
   // Until the loop is actually running — off screen, reduced motion, or an
   // IntersectionObserver that never fires — the mock shows the end of the
@@ -97,17 +111,23 @@ export default function AskAiChat() {
   const at = running ? phase : LAST
   const typed = typing.phase === at ? typing.text : ''
   const name = PHASES[at].name
-  const seen = (n) => PHASES.findIndex((p) => p.name === n) <= at
+  // `findIndex` returns -1 for a phase this variant does not have, and -1 <= at
+  // is true — which leaked the premium-only second answer into the free frame.
+  const seen = (n) => {
+    const i = PHASES.findIndex((p) => p.name === n)
+    return i !== -1 && i <= at
+  }
 
   const showQ1 = seen('sentQ1')
   const showThinking1 = name === 'thinking1'
   const showAnswer = seen('answer')
   const showQ2 = seen('sentQ2')
   const showThinking2 = name === 'thinking2'
+  const showAnswer2 = seen('answer2')
   const blocked = name === 'limit'
 
   return (
-    <div ref={ref} className="flex h-full flex-col" style={{ backgroundColor: '#e8edec' }}>
+    <div ref={ref} className="phone-screen flex flex-col" style={{ backgroundColor: '#e8edec' }}>
       {/* Header — the book, and the counter this whole page is about. */}
       <div className="flex items-center gap-2 rounded-b-2xl bg-white px-3 py-2.5">
         <Icon name="arrow_back" className="shrink-0 text-[15px]" style={{ color: '#101512' }} />
@@ -116,18 +136,25 @@ export default function AskAiChat() {
           <span className="line-clamp-2 text-[10.5px] font-bold" style={{ color: '#101512' }}>
             {BOOK}
           </span>
-          <span className="mt-0.5 block text-[9.5px] font-semibold" style={{ color: '#d3392f' }}>
-            {USAGE.askUsed}/{USAGE.askTotal} questions used
-          </span>
+          {variant === 'free' ? (
+            <span className="mt-0.5 block text-[9.5px] font-semibold" style={{ color: '#d3392f' }}>
+              {USAGE.askUsed}/{USAGE.askTotal} questions used
+            </span>
+          ) : (
+            <span className="mt-0.5 block text-[9.5px] font-semibold" style={{ color: '#276b54' }}>
+              No question limit
+            </span>
+          )}
         </span>
       </div>
 
-      <div className="flex flex-1 flex-col gap-2 overflow-hidden px-3 py-3">
+      <div className="flex flex-1 flex-col justify-end gap-2 overflow-hidden px-3 py-3">
         {showQ1 && <Bubble from="user">{Q1}</Bubble>}
         {showThinking1 && <Thinking />}
         {showAnswer && <Bubble from="ai">{A1}</Bubble>}
         {showQ2 && <Bubble from="user">{Q2}</Bubble>}
         {showThinking2 && <Thinking />}
+        {showAnswer2 && <Bubble from="ai">{A2}</Bubble>}
       </div>
 
       {/* The app's own banner, dropping in once the tenth question is spent. */}

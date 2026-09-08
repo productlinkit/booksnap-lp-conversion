@@ -88,7 +88,9 @@ src/
 │   ├── Comparison.jsx      Free vs Premium (table ≥ md, stacked cards below)
 │   ├── Pricing.jsx         monthly vs annual, annual recommended
 │   ├── AskAI.jsx           Ask AI deep dive
-│   ├── AskAiChat.jsx       the Ask AI mock, played rather than photographed
+│   ├── AskAiChat.jsx       the Ask AI mock, played rather than photographed —
+│   │                       `variant="free"` ends at the limit banner,
+│   │                       `variant="premium"` answers again instead
 │   ├── Testimonial.jsx     reviews + trust strip
 │   ├── FinalCTA.jsx        closing momentum push (deliberately bare)
 │   ├── Footer.jsx
@@ -111,18 +113,13 @@ Static art lives in `public/`:
 
 ```
 public/
-├── app/                    production BookSnap captures, both 739×1600 — the
-│   ├── screen-limit.png    same Ask AI screen in its two states. screen-limit
-│   └── screen-chat.png     is blocked: counter red at 10/10, "Free limit
-│                           reached", composer dead. screen-chat is running:
-│                           suggestions offered, send button live. The hero
-│                           shows them side by side (limit drained and
-│                           padlocked); Ask AI shows screen-limit in colour.
-├── covers/                 nine catalogue covers, 420px-tall JPEGs, 152KB for
-│                           the set. The API serves them at print resolution —
-│                           7.1MB for the nine, against a 104px tile — so they
-│                           are no longer loaded live. `source` in covers.js
-│                           keeps each original URL for refreshing.
+├── app/
+│   └── cover-thumb.png     the book cover in the Ask AI mock's header, cropped
+│                           out of the app's own limit capture. The two full
+│                           screenshots that used to live here are gone: the
+│                           hero and the Ask AI section run the conversation
+│                           live now (AskAiChat.jsx), so half a megabyte of
+│                           unused PNG was shipping for nothing.
 ├── flower-1.png            the site's cut-paper ornaments, re-cut to RGBA:
 └── flower-2.png            the originals ship an opaque ground that would
                             render as a pale rectangle on the dark panels.
