@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { CATEGORIES, VIBES, PLANS } from '../lib/onboarding'
+import { CATEGORIES, VIBES, PLANS, dueToday } from '../lib/onboarding'
 
 /** The trial screen offers the paid plans; Free is where the reader already is. */
 const PAID = PLANS.filter((p) => p.id !== 'free')
@@ -141,7 +141,7 @@ function PlanCard({ plan, selected, expanded, onSelect, onToggle }) {
         <span className="shrink-0 text-right">
           <span className="flex items-baseline justify-end gap-1">
             <span className="text-[30px] font-extrabold leading-none" style={{ color: INK }}>
-              {plan.price}
+              {dueToday(plan)}
             </span>
             <span className="text-[13px] font-semibold" style={{ color: MUTED }}>
               {plan.currency}

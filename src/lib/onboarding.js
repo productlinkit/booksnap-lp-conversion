@@ -135,5 +135,14 @@ export const PLANS = [
   },
 ]
 
+/**
+ * What a plan costs today: the trial price when it has one, otherwise the
+ * monthly figure. `price` is a `{ monthly, yearly }` object, so never render it
+ * directly — doing that is what blanked the flow with React error #31.
+ */
+export function dueToday(plan) {
+  return plan.trial ? plan.trial.price : plan.price.monthly
+}
+
 /** The saving the yearly toggle advertises. See the warning above. */
 export const YEARLY_SAVE_PCT = 20

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { PLANS } from '../lib/onboarding'
+import { PLANS, dueToday } from '../lib/onboarding'
 import { HOME_URL, PLANS_URL } from '../lib/config'
 import { Icon } from './primitives'
 import { DEEP } from './flow'
@@ -133,7 +133,7 @@ export default function Checkout() {
             <p className="mt-2 flex flex-wrap items-baseline gap-x-2.5">
               <span className="flex items-baseline gap-1.5">
                 <span className="text-[34px] font-extrabold leading-none" style={{ color: INK }}>
-                  {plan.trial ? plan.trial.price : plan.price.monthly}
+                  {dueToday(plan)}
                 </span>
                 <span className="text-[15px] font-bold" style={{ color: INK }}>
                   {plan.currency}
@@ -210,7 +210,7 @@ export default function Checkout() {
             </span>
             <span className="flex items-baseline gap-1.5">
               <span className="text-[30px] font-extrabold leading-none" style={{ color: INK }}>
-                {plan.price}
+                {dueToday(plan)}
               </span>
               <span className="text-[15px] font-bold" style={{ color: INK }}>
                 {plan.currency}
