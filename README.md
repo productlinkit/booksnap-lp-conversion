@@ -87,7 +87,8 @@ src/
 │   ├── flow.jsx            shell shared by Start and Checkout
 │   ├── Comparison.jsx      Free vs Premium (table ≥ md, stacked cards below)
 │   ├── Pricing.jsx         monthly vs annual, annual recommended
-│   ├── AskAI.jsx           Ask AI deep dive + the real Ask AI screen
+│   ├── AskAI.jsx           Ask AI deep dive
+│   ├── AskAiChat.jsx       the Ask AI mock, played rather than photographed
 │   ├── Testimonial.jsx     reviews + trust strip
 │   ├── FinalCTA.jsx        closing momentum push (deliberately bare)
 │   ├── Footer.jsx

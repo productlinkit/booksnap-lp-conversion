@@ -1,16 +1,18 @@
 import { ASK_AI_BENEFITS } from '../lib/content'
 import { USAGE, CTA } from '../lib/config'
 import { Blob, CtaButton, Icon, Phone, SectionLabel } from './primitives'
+import AskAiChat from './AskAiChat'
 
 /**
  * Ask AI is the reason Premium is not just "more summaries" — it is what turns
  * a snap into a tutor.
  *
- * The visual is the production limit screen (`public/app/screen-limit.png`),
- * and it does the whole job on its own: a real question, a real answer, a
- * second question mid-flight, the counter in red at "10/10 questions used",
- * and the app's own "Free limit reached" banner underneath. It shows Ask AI
- * working *and* the wall, which is exactly the argument this section makes.
+ * The visual plays the exchange rather than showing a picture of it: the
+ * question types itself into the composer, sends, the assistant thinks and
+ * answers, a second question goes in, and the app's own "Free limit reached"
+ * banner drops in on top. Every line is the one in the production capture —
+ * only the timing is added. It shows Ask AI working *and* the wall, which is
+ * exactly the argument this section makes.
  *
  * Because the screenshot states the counter itself, the chip that used to
  * repeat it is gone. What is left beside the frame is the one thing the
@@ -69,11 +71,11 @@ function AskAiVisual() {
           the container. The bar below sits outside it, so it gets the full
           width instead of being squeezed into three lines. */}
       <div className="relative z-10 px-6 sm:px-8 lg:px-10">
-        <Phone
-          className="animate-float-main"
-          src="/app/screen-limit.png"
-          alt="Ask AI in BookSnap after the tenth question: the counter reads 10 of 10 used and the free limit banner has appeared"
-        />
+        {/* The frame holds a running mock, not a capture: the question types
+            itself, the answer arrives, and the app's limit banner drops in. */}
+        <Phone className="animate-float-main aspect-[415/900]">
+          <AskAiChat />
+        </Phone>
         <PremiumChip />
       </div>
 

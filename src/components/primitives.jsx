@@ -126,7 +126,8 @@ export function SectionHead({ label, labelTone, labelInk, title, sub, align = 'c
 export function Phone({ src, alt, locked = false, className = '', style, children }) {
   return (
     <div className={`phone ${locked ? 'phone-locked' : ''} ${className}`} style={style}>
-      <img src={src} alt={alt} loading="lazy" decoding="async" />
+      {/* `src` is optional: the frame also wraps a live mock, not only a capture. */}
+      {src && <img src={src} alt={alt} loading="lazy" decoding="async" />}
       {children}
     </div>
   )
