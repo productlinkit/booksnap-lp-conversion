@@ -192,7 +192,14 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    number comes from and why the catalogue API's own figures contradict each
    other. Replace `PRICE_TABLE`; nothing else needs editing. `CURRENCY` switches
    the page between the USD and IDR tables.
-2. **⚠️ THE PLAN CONTENT IS SOURCED — THE HERO IS NOT.** `PLANS` in
+2. **`COMPARISON` in `content.js` is the product owner's own breakdown** and
+   outranks everything else — the plan cards, the catalogue API, and anything
+   inferred from either. It corrected two mistakes of mine in opposite
+   directions: Free's Ask AI limit is **one book** (not ten questions per
+   book), and audiobook, AI recommendations and early access genuinely are
+   **absent** on Free, not merely limited. A marketing card omitting a line
+   proves nothing either way — ask, or read the product's code.
+3. **⚠️ THE PLAN CONTENT IS SOURCED — THE HERO IS NOT.** `PLANS` in
    `onboarding.js` and `COMPARISON` in `content.js` are both transcribed from
    BookSnap's own plan cards, so the pricing section, the comparison, the
    sign-up flow and the checkout can never disagree with each other. They do
@@ -207,7 +214,7 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    yearly figure exists (the API implies 27–28%). The summary count is settled
    at **500+** — the app's plan screen says so, and that agrees with
    `FACTS.summaries`; the "50+" came from a pricing mockup.
-3. **⚠️ THE APP'S PLAN SCREEN CONTRADICTS THIS PAGE, TWICE.** Both lines below
+4. **⚠️ THE APP'S PLAN SCREEN CONTRADICTS THIS PAGE, TWICE.** Both lines below
    are transcribed from the app's own plan screen into `src/lib/onboarding.js`,
    left as the app states them rather than quietly reconciled:
 
@@ -222,7 +229,7 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    A reader who upgrades on this page's promise and lands on Premium would find
    the counter still running. Either retarget the page at Pro or correct the
    claims before it goes in front of traffic.
-4. **⚠️ The hero advertises the 3-day free trial.** The app really offers it —
+5. **⚠️ The hero advertises the 3-day free trial.** The app really offers it —
    its onboarding Trial screen says "Try all features free for 3 days" and
    `/stripe/subscribe` takes `trial_days` — but the app gates it on
    `has_used_trial`, and this page is written for people who have been using
@@ -230,21 +237,21 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    trial, and for them "$0 today" breaks at checkout. `TRIAL.show` in
    `config.js` turns it off, falling back to the annual saving, which is true
    for everyone; better still, hydrate it per user from the same flag.
-5. **CTAs point at `/start`**, the flow above. `PLANS_URL` in `config.js` still
+6. **CTAs point at `/start`**, the flow above. `PLANS_URL` in `config.js` still
    holds the app's own plan picker for sending readers straight there instead.
    App links are language-prefixed (`/en/home`, `/en/profile/...`): its router
    carries a `/:lang/*` catch-all and the unprefixed paths only redirect into
    it, so the prefixed form skips a hop.
-6. **The usage counters should be hydrated per user.** `USAGE` in `config.js` is
+7. **The usage counters should be hydrated per user.** `USAGE` in `config.js` is
    the fallback for a visitor we can't identify — the momentum framing only
    works if "3 of 3" is the reader's own number.
-7. **Every CTA carries `data-cta="<section>"`**, so GA4 can attribute the
+8. **Every CTA carries `data-cta="<section>"`**, so GA4 can attribute the
    upgrade to the section that earned it from one delegated listener.
-8. **Reviews are the six already published on booksnap.ai**, unedited. None of
+9. **Reviews are the six already published on booksnap.ai**, unedited. None of
    them has been rewritten to mention Premium. `PRICING_QUOTE_INDEX` picks the
    one quoted beside the price; the reviews board drops it so no quote appears
    twice.
-9. **The mockups are real product captures.** They are the only images on the
+10. **The mockups are real product captures.** They are the only images on the
    page that are not catalogue covers, which load live from the API.
    ⚠️ Do not source new screens from the booksnap.ai bundle: `hero-right` and
    `how-04` there are only 236×512, and scaling them up adds no detail — an
@@ -258,7 +265,7 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    ~210px the line is a few pixels tall and unreadable, but it is a real
    contradiction: replace it with a capture from an account where the counter
    is absent as soon as one exists.
-10. The page is `noindex` — it is an in-app / retargeting destination and should
+11. The page is `noindex` — it is an in-app / retargeting destination and should
    not compete with booksnap.ai in search.
 
 ## Responsive

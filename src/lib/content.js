@@ -8,99 +8,68 @@ export const NAV_LINKS = [
 /**
  * The plan comparison.
  *
- * ⚠️ SOURCED, NOT WRITTEN. Every value is transcribed from BookSnap's own plan
- * cards — the same three that `PLANS` in `onboarding.js` carries — so the table
- * and the pricing section can never say different things. Do not add a row
- * without a source.
+ * ⚠️ SUPPLIED BY THE PRODUCT OWNER. This table is transcribed from the
+ * breakdown they gave, and it is the authority — above the plan cards, above
+ * the catalogue API, and above anything inferred from either. It settled two
+ * things I had wrong in opposite directions:
  *
- * What the cards actually say, and why this table looks the way it does:
+ *   - Free's Ask AI limit is **one book**, not ten questions per book. That
+ *     matches the "Book limit reached" state in the app's Ask AI screen, which
+ *     I had seen and misread as a second cap on top of the question counter.
+ *   - Audiobook, AI recommendations and early access genuinely are **absent**
+ *     on Free. An earlier version of this table called them "limited" after
+ *     over-correcting from the opposite mistake of calling Ask AI absent.
  *
- *   - Free is a **preview**, not a monthly quota. Its card reads "Limited
- *     preview of book summaries" and "Upgrade anytime". Nothing anywhere
- *     supports "3 snaps per month", which `USAGE` in `config.js` invents and
- *     the hero still repeats.
- *   - Ask AI is on the free plan, counted, not absent. Read from the app's own
- *     Ask AI screen rather than inferred: it takes `limits.tier`,
- *     `limits.max_questions` and `limits.can_ask` from the API, and the branch
- *     that renders the star and the word "Unlimited" is literally
- *     `"pro" === tier`. Every other tier — free and Premium alike — renders
- *     `${used}/${max_questions} questions used`. The count is per book, and a
- *     separate "Book limit reached" state caps how many books can be asked
- *     about at all. The capture of a free account reads 10/10, and Premium's
- *     card says 10 chats, so Premium does not lift that cap; Pro does. Hence
- *     three columns.
- *   - The catalogue API describes the same plans differently again
- *     ("Unlimited access to ALL books", "Ad-free", "Basic bookmarks (max 10)").
- *     The cards are what a reader is actually shown, so the cards win here —
- *     and they settle the summary count at 500+, not the 50+ a pricing mockup
- *     showed.
- *
- * ⚠️ THE FREE COLUMN DESCRIBES LIMITS, NOT ABSENCES. Per the product owner,
- * everything is present on the free plan — it is capped, not withheld. Two
- * rows here said "No" purely because the line is missing from the free plan's
- * card, and both were wrong: Ask AI is on free with a per-book counter, and
- * recommendations are limited rather than absent. So this column now reads
- * "Limited", "Preview", "10 questions per book", "On release".
- *
- * Do not turn an omission from a marketing card into a "No" again. If a free
- * value is genuinely unknown, say what is capped, not that it is missing.
+ * The lesson, since it cost two passes: a marketing card omitting a line
+ * proves nothing either way. Ask, or read the product's own code. Do not infer.
  */
 export const COMPARISON = [
   {
     icon: 'auto_stories',
-    feature: 'Book summaries',
-    free: 'Limited preview',
-    premium: '500+ summaries',
-    pro: '500+ summaries',
+    feature: 'Book summary',
+    free: 'Preview only',
+    premium: 'Full, 500+ titles',
+    pro: 'Full, 500+ titles',
     freeHas: 'partial',
-    note: 'Free opens a preview of each snap; the paid plans open all 500+.',
+    note: 'Free opens the first part of a snap; the paid plans open all 500+ in full.',
   },
   {
     icon: 'forum',
     feature: 'Ask AI',
-    free: '10 questions per book',
-    premium: '10 chats monthly',
-    pro: 'Unlimited',
+    free: 'One book only',
+    premium: '10 chats a month, every book',
+    pro: 'Unlimited, every book',
     freeHas: 'partial',
     premiumHas: 'partial',
-    note: 'The count is per book. Only the Pro tier shows "Unlimited" in the app.',
+    note: 'Free can question a single book. Only Pro drops the count.',
   },
   {
     icon: 'headphones',
-    feature: 'Text and audiobook',
-    free: 'Preview',
+    feature: 'Audiobook',
+    free: 'Not included',
     premium: 'Full access',
     pro: 'Full access',
-    freeHas: 'partial',
-    note: 'Read it or listen to it, whichever suits the moment.',
+    freeHas: false,
+    note: 'Every snap narrated, for the commute and the treadmill.',
   },
   {
     icon: 'auto_awesome',
     feature: 'AI recommendations',
-    free: 'Limited',
+    free: 'Not included',
     premium: 'Included',
-    pro: 'Smarter personalisation',
-    freeHas: 'partial',
+    pro: 'Smarter, personalised',
+    freeHas: false,
     note: 'Pro tunes them to how you actually read.',
   },
   {
     icon: 'new_releases',
-    feature: 'New summaries',
-    free: 'On release',
-    premium: 'On release',
-    pro: 'Early access',
-    freeHas: 'partial',
-    premiumHas: 'partial',
-    note: 'Everyone gets them; a Pro library gets them first.',
-  },
-  {
-    icon: 'payments',
-    feature: 'Price',
-    free: '$0',
-    premium: '$2.99 / month',
-    pro: '$5.99 / month',
-    freeHas: 'partial',
-    note: 'Or 20% less a month on the yearly plan.',
+    feature: 'Early access to new summaries',
+    free: 'No',
+    premium: 'No',
+    pro: 'Yes',
+    freeHas: false,
+    premiumHas: false,
+    note: 'New snaps land in a Pro library first.',
   },
 ]
 

@@ -51,9 +51,9 @@ export default function Comparison() {
       <div className="relative mx-auto max-w-6xl px-3 sm:px-8 md:px-12">
         <div className="fade-up flex justify-center">
           <SectionHead
-            label="Where the limits are"
-            title={<>Nothing is missing. It&rsquo;s capped.</>}
-            sub="Free gives you all of BookSnap in miniature — a preview of every snap, ten Ask AI questions per book. Upgrading lifts the ceilings rather than handing you new features."
+            label="Free vs Premium vs Pro"
+            title={<>Where Free stops.</>}
+            sub="Ask AI on a single book, previews instead of full snaps, and no audio at all. Here is the whole picture, plan by plan."
           />
         </div>
 
@@ -84,7 +84,7 @@ export default function Comparison() {
                       className="text-[12px] font-bold uppercase tracking-[0.1em]"
                       style={{ color: 'var(--color-on-surface-variant)' }}
                     >
-                      Where the ceiling is
+                      Feature
                     </span>
                   </th>
                   <th scope="col" className="px-4 pb-4 align-bottom">
