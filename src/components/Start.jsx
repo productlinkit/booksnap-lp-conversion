@@ -237,23 +237,7 @@ export default function Start() {
 
   return (
     <FlowShell>
-      {/* Skip goes to the plan step, which is what the reader came for. */}
-      <div className="flex justify-end">
-        {name === 'plans' ? (
-          <span className="h-6" />
-        ) : (
-          <button
-            type="button"
-            onClick={() => setStep(STEPS.length - 1)}
-            className="text-[16px] font-medium underline underline-offset-4"
-            style={{ color: INK }}
-          >
-            Skip
-          </button>
-        )}
-      </div>
-
-      <div className="mt-6">
+      <div className="mt-12">
         <Heading {...HEADS[name]} />
       </div>
 
