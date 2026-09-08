@@ -202,11 +202,11 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    and the hero, the meters and the final CTA all repeat. Decide what the real
    free limit is and set `USAGE` from it, or drop the counter framing.
 
-   Two numbers still need confirming, both flagged in `onboarding.js`: the
+   One number still needs confirming, flagged in `onboarding.js`: the
    **yearly** prices are derived at the advertised 20% because no confirmed
-   yearly price exists (the API implies 27–28%), and the plan card says "50+
-   book summaries" where an earlier capture — and `FACTS.summaries` on this
-   page — says 500+.
+   yearly figure exists (the API implies 27–28%). The summary count is settled
+   at **500+** — the app's plan screen says so, and that agrees with
+   `FACTS.summaries`; the "50+" came from a pricing mockup.
 3. **⚠️ THE APP'S PLAN SCREEN CONTRADICTS THIS PAGE, TWICE.** Both lines below
    are transcribed from the app's own plan screen into `src/lib/onboarding.js`,
    left as the app states them rather than quietly reconciled:

@@ -37,7 +37,9 @@ export const VIBES = [
 ]
 
 /**
- * The three plans, as the app's plan cards present them.
+ * The three plans, transcribed from the app's own plan screen — taglines and
+ * feature lines word for word, including "All Premium feature" in the
+ * singular, which is how the app writes it.
  *
  * ⚠️ PRICES AND SAVINGS ARE NOT FULLY CONFIRMED.
  *
@@ -49,9 +51,9 @@ export const VIBES = [
  *     Premium Yearly at $26.23, Pro Yearly at $51.85 — which works out at 27%
  *     and 28% off, not 20%. Replace `price.yearly` and `yearlyTotal` with the
  *     finance-confirmed numbers; nothing else needs editing.
- *   - "50+ book summaries" is what the plan card in the latest design says.
- *     An earlier capture of the same card said "500+", which is also the figure
- *     `FACTS.summaries` uses across this page. One of them is wrong.
+ *   - Settled: it is **500+ book summaries**. A pricing mockup said "50+";
+ *     the app's own plan screen says 500+, twice, which also agrees with
+ *     `FACTS.summaries` on this page.
  *
  * ⚠️ AND NOTE WHAT PREMIUM ACTUALLY BUYS. Its card reads "Experience with
  * ASK.AI — 10 chats", the same allowance the free plan has. "Full experience
@@ -63,18 +65,18 @@ export const PLANS = [
   {
     id: 'free',
     name: 'Free',
-    tagline: 'Start your reading journey at no cost.',
+    tagline: 'Start exploring BookSnap for free.',
     price: { monthly: '$0', yearly: '$0' },
     yearlyTotal: '$0',
     currency: 'USD',
     tone: 'mint',
-    features: ['Limited preview of book summaries', 'Upgrade anytime'],
+    features: ['Limited preview of book summaries', 'Upgrade anytime to unlock full access'],
     trial: null,
   },
   {
     id: 'premium',
     name: 'Premium',
-    tagline: 'The most popular choice for book lovers.',
+    tagline: 'Learn faster with Premium Plan.',
     price: { monthly: '$2.99', yearly: '$2.39' },
     yearlyTotal: '$28.70',
     currency: 'USD',
@@ -82,9 +84,9 @@ export const PLANS = [
     badge: 'Best deal',
     cta: 'Subscribe Now',
     features: [
-      'Experience with ASK.AI — 10 chats',
-      '50+ book summaries',
-      'Full access: text + audiobook',
+      'Experience with ASK.AI 10 chats monthly',
+      '500+ book summaries',
+      'Full access to all text and audiobook',
       'Get AI recommendations',
     ],
     trial: {
@@ -100,14 +102,14 @@ export const PLANS = [
   {
     id: 'pro',
     name: 'Pro',
-    tagline: 'For power readers who want it all.',
+    tagline: 'Understand deeper with Pro Plan.',
     price: { monthly: '$5.99', yearly: '$4.79' },
     yearlyTotal: '$57.50',
     currency: 'USD',
     tone: 'dark',
     cta: 'Upgrade to Pro',
     features: [
-      'All Premium features',
+      'All Premium feature',
       'Full experience with ASK.AI',
       'Smarter AI personalization',
       'Early access to newest summary',

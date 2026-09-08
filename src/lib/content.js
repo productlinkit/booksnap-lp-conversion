@@ -31,7 +31,9 @@ export const NAV_LINKS = [
  *     three columns.
  *   - The catalogue API describes the same plans differently again
  *     ("Unlimited access to ALL books", "Ad-free", "Basic bookmarks (max 10)").
- *     The cards are what a reader is actually shown, so the cards win here.
+ *     The cards are what a reader is actually shown, so the cards win here —
+ *     and they settle the summary count at 500+, not the 50+ a pricing mockup
+ *     showed.
  *
  * ⚠️ A "No" in the free column means the line is not on that plan's card, which
  * is not the same as verified absence — an earlier version of this table said
@@ -43,16 +45,16 @@ export const COMPARISON = [
     icon: 'auto_stories',
     feature: 'Book summaries',
     free: 'Limited preview',
-    premium: '50+ summaries',
-    pro: '50+ summaries',
+    premium: '500+ summaries',
+    pro: '500+ summaries',
     freeHas: 'partial',
-    note: 'Free opens a preview of each snap; the paid plans open the whole thing.',
+    note: 'Free opens a preview of each snap; the paid plans open all 500+.',
   },
   {
     icon: 'forum',
     feature: 'Ask AI',
     free: '10 questions per book',
-    premium: '10 chats',
+    premium: '10 chats monthly',
     pro: 'Unlimited',
     freeHas: 'partial',
     premiumHas: 'partial',
