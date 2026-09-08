@@ -24,7 +24,7 @@ deep-linked or refreshed on any host, and costs no routing dependency:
 | --- | --- | --- |
 | `index.html` → `src/main.jsx` | `/` | the landing page |
 | `start.html` → `src/start.jsx` | `/start` | the sign-up flow |
-| `checkout.html` → `src/checkout.jsx` | `/checkout` | the checkout **preview** |
+| `checkout.html` → `src/checkout.jsx` | `/checkout` | the Payment Method screen (**takes no payment**) |
 
 The click path is `/` → `/start` → `/checkout` → `apps.booksnap.ai/home`, or
 `/start` → the app directly via "Continue Without Plan".
@@ -36,7 +36,13 @@ either side on the same 0.8s ease-out the app uses. The input shape matches too
 button. Chip height is measured from the app's capture (54px on a 750px-wide 2×
 screenshot, so ~27 CSS px), not estimated.
 
-Both flow pages are dressed by `src/components/flow.jsx` — the phone-width
+`/checkout` is the app's Payment Method screen, measured off its capture rather
+than eyeballed: page `#e3e7e8`, fields 58px tall with 18px between them and a
+1.5px `#1e5341` border, 26px page padding, and the total as a white sheet
+pinned to the bottom. It has no background overlays — that screen is flat grey
+— so it does not use `FlowShell`.
+
+The two sign-up screens are dressed by `src/components/flow.jsx` — the phone-width
 panel, the two washes, the two-line heading with its last word in green, the
 pill buttons — so the checkout is the last screen of the same flow rather than
 a page in the landing page's clothes.
@@ -55,10 +61,9 @@ component state; there is no backend to send it to.
 
 `vercel.json` sets `cleanUrls`, so `/checkout` resolves without the extension.
 
-⚠️ **The checkout takes no payment.** It looks finished — the visible
-"preview only" notice was removed on request — but its card fields are
-`readOnly` with sample values, nothing is bound to state, and the page makes no
-network call of any kind. The button hands off to `apps.booksnap.ai/home`, and
+⚠️ **The checkout takes no payment.** It looks finished, but every field is
+`readOnly` — they render as the app's empty state and accept nothing — nothing
+is bound to state, and the page makes no network call of any kind. The button hands off to `apps.booksnap.ai/home`, and
 real payment happens in the app behind a signed-in session.
 
 **Leave the fields inert until there is a real integration.** A checkout that

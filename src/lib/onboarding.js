@@ -60,8 +60,11 @@ export const PLANS = [
     tagline: 'Learn faster with Premium Plan.',
     price: '$0',
     currency: 'USD',
+    strike: '$2.99 USD',
     then: 'Then $2.99 / month',
     badge: '3 Days Free Trial',
+    // The app's own line on its Payment Method screen.
+    blurb: 'Unlock the full story library and start crafting your own magical tales',
     benefits: [
       'Experience with ASK.AI 10 chats monthly',
       '500+ book summaries',
@@ -75,8 +78,10 @@ export const PLANS = [
     tagline: 'Understand deeper with Pro Plan.',
     price: '$5.99',
     currency: 'USD',
+    strike: null,
     then: null,
     badge: null,
+    blurb: 'Understand deeper with Pro — the full Ask AI experience and smarter personalisation.',
     benefits: [
       'All Premium feature',
       'Full experience with ASK.AI',
