@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { PLANS } from '../lib/onboarding'
 import { HOME_URL, PLANS_URL } from '../lib/config'
 import { Icon } from './primitives'
@@ -12,13 +13,26 @@ import { DEEP } from './flow'
  * There are no background overlays on this screen — it is flat grey — so it
  * does not use FlowShell.
  *
- * ⚠️ No payment is taken here and none can be. Every field is `readOnly`, so
- * they render as the app's empty state and accept nothing; nothing is bound to
- * state and the page makes no network call. Keep it that way until there is a
- * real integration: a checkout that accepts typing gets given real card
- * numbers by real people, and this project has no backend, no Stripe key and
- * no session to hold them safely. Real payment lives in the app, behind a
- * signed-in session, and the button hands off to it.
+ * ⚠️ THE FIELDS TAKE INPUT, BUT NOTHING IS TAKEN FROM THEM.
+ *
+ * They were `readOnly`; typing was enabled on request so the flow can be
+ * walked end to end. What has not changed, and must not:
+ *
+ *   - Values live in this component's `useState` and nowhere else. They are
+ *     never written to storage, never attached to an analytics event, and
+ *     never sent anywhere — this page makes no network call at all. Clicking
+ *     Continue navigates away and the state is gone with the page.
+ *   - `autoComplete="off"` on every field, so the browser does not offer to
+ *     save a card either.
+ *   - No charge happens. Continue hands off to the app, where real payment
+ *     lives behind a signed-in session.
+ *
+ * So a real card number typed here is discarded, not collected. That is the
+ * only reason this is safe to have live. Wiring these values to anything —
+ * a fetch, localStorage, a tracking call — turns a harmless mock into a form
+ * that quietly harvests card data. Do not. To take payment for real, use
+ * Stripe Elements with the publishable key and an authenticated
+ * `/stripe/subscribe` call, which never lets raw card data touch this page.
  */
 
 const INK = '#101512'
@@ -31,8 +45,8 @@ function chosenPlan() {
   return PLANS.find((p) => p.id === id) || PLANS[0]
 }
 
-/** A field in the app's shape: label above a placeholder, inside one box. */
-function Field({ label, placeholder, trailing, className = '' }) {
+/** A field in the app's shape: label above the value, inside one box. */
+function Field({ label, placeholder, value, onChange, trailing, inputMode, maxLength, className = '' }) {
   return (
     <label
       className={`flex min-h-[58px] flex-col justify-center gap-0.5 rounded-[14px] px-4 py-2 ${className}`}
@@ -44,18 +58,30 @@ function Field({ label, placeholder, trailing, className = '' }) {
       <span className="flex items-center gap-2">
         <input
           type="text"
-          value=""
-          readOnly
-          tabIndex={-1}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
+          inputMode={inputMode}
+          maxLength={maxLength}
+          /* Off on every field: nothing here should reach a password manager
+             either, since nothing here is a real payment. */
           autoComplete="off"
-          className="w-full cursor-default bg-transparent text-[15px] outline-none placeholder:text-[#9aa5a1]"
+          className="w-full bg-transparent text-[15px] outline-none placeholder:text-[#9aa5a1]"
           style={{ color: INK }}
         />
         {trailing}
       </span>
     </label>
   )
+}
+
+/** Digit grouping as you type — presentation only, nothing is validated. */
+const groupCard = (v) =>
+  v.replace(/\D/g, '').slice(0, 16).replace(/(.{4})/g, '$1 ').trim()
+
+const groupExpiry = (v) => {
+  const d = v.replace(/\D/g, '').slice(0, 4)
+  return d.length > 2 ? `${d.slice(0, 2)}/${d.slice(2)}` : d
 }
 
 /** The Visa mark that sits in the card-number field. */
@@ -73,6 +99,13 @@ function VisaMark() {
 
 export default function Checkout() {
   const plan = chosenPlan()
+
+  // Local only. Never stored, never sent — see the note at the top of the file.
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [card, setCard] = useState('')
+  const [expiry, setExpiry] = useState('')
+  const [ccv, setCcv] = useState('')
 
   return (
     <div className="flex min-h-[100svh] justify-center" style={{ backgroundColor: '#d7dcdd' }}>
@@ -121,12 +154,34 @@ export default function Checkout() {
           </h2>
 
           <div className="mt-5 flex flex-col gap-[18px]">
-            <Field label="Name on Card" placeholder="Alexander Pierce" />
-            <Field label="Email" placeholder="example@email.com" />
-            <Field label="Card Number" placeholder="XXXX XXXX XXXX XXXX" trailing={<VisaMark />} />
+            <Field label="Name on Card" placeholder="Alexander Pierce" value={name} onChange={setName} />
+            <Field label="Email" placeholder="example@email.com" value={email} onChange={setEmail} />
+            <Field
+              label="Card Number"
+              placeholder="XXXX XXXX XXXX XXXX"
+              value={card}
+              onChange={(v) => setCard(groupCard(v))}
+              inputMode="numeric"
+              maxLength={19}
+              trailing={<VisaMark />}
+            />
             <div className="grid grid-cols-2 gap-[18px]">
-              <Field label="Expiration Date" placeholder="MM/YY" />
-              <Field label="CCV" placeholder="XXX" />
+              <Field
+                label="Expiration Date"
+                placeholder="MM/YY"
+                value={expiry}
+                onChange={(v) => setExpiry(groupExpiry(v))}
+                inputMode="numeric"
+                maxLength={5}
+              />
+              <Field
+                label="CCV"
+                placeholder="XXX"
+                value={ccv}
+                onChange={(v) => setCcv(v.replace(/\D/g, '').slice(0, 4))}
+                inputMode="numeric"
+                maxLength={4}
+              />
             </div>
           </div>
 
@@ -162,6 +217,8 @@ export default function Checkout() {
             </span>
           </div>
 
+          {/* Always enabled and never validated: the reader continues whatever
+              the fields hold, which is the bypass this flow is meant to be. */}
           <a
             href={HOME_URL}
             data-cta="checkout-continue"
