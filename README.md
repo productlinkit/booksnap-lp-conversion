@@ -192,14 +192,21 @@ CTA does — wrap it in a positioned `<div>` rather than passing `absolute` to i
    number comes from and why the catalogue API's own figures contradict each
    other. Replace `PRICE_TABLE`; nothing else needs editing. `CURRENCY` switches
    the page between the USD and IDR tables.
-2. **⚠️ THE COMPARISON TABLE IS NOW SOURCED — THE HERO IS NOT.** `COMPARISON`
-   in `content.js` is transcribed from the plans API and the app's plan screen,
-   and it contradicts the rest of the page. The free plan is **not a monthly
-   quota**: the API describes it as "Access to free books only", "Read & listen
-   with ads", "Basic bookmarks (max 10)". Nothing anywhere supports "3 snaps
-   per month", which `USAGE` in `config.js` invents and the hero, the meters
-   and the final CTA all repeat. Decide what the real free limit is and set
-   `USAGE` from it, or drop the counter framing.
+2. **⚠️ THE PLAN CONTENT IS SOURCED — THE HERO IS NOT.** `PLANS` in
+   `onboarding.js` and `COMPARISON` in `content.js` are both transcribed from
+   BookSnap's own plan cards, so the pricing section, the comparison, the
+   sign-up flow and the checkout can never disagree with each other. They do
+   still disagree with the hero. Free is a **preview**, not a monthly quota —
+   its card reads "Limited preview of book summaries" and "Upgrade anytime".
+   Nothing supports "3 snaps per month", which `USAGE` in `config.js` invents
+   and the hero, the meters and the final CTA all repeat. Decide what the real
+   free limit is and set `USAGE` from it, or drop the counter framing.
+
+   Two numbers still need confirming, both flagged in `onboarding.js`: the
+   **yearly** prices are derived at the advertised 20% because no confirmed
+   yearly price exists (the API implies 27–28%), and the plan card says "50+
+   book summaries" where an earlier capture — and `FACTS.summaries` on this
+   page — says 500+.
 3. **⚠️ THE APP'S PLAN SCREEN CONTRADICTS THIS PAGE, TWICE.** Both lines below
    are transcribed from the app's own plan screen into `src/lib/onboarding.js`,
    left as the app states them rather than quietly reconciled:

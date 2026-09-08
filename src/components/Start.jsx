@@ -1,5 +1,8 @@
 import { useState } from 'react'
 import { CATEGORIES, VIBES, PLANS } from '../lib/onboarding'
+
+/** The trial screen offers the paid plans; Free is where the reader already is. */
+const PAID = PLANS.filter((p) => p.id !== 'free')
 import { HOME_URL } from '../lib/config'
 import { Icon } from './primitives'
 import { ACCENT, DEEP, INK, MUTED, FlowShell, Heading, PrimaryButton, GhostButton, Field } from './flow'
@@ -117,12 +120,12 @@ function PlanCard({ plan, selected, expanded, onSelect, onToggle }) {
         boxShadow: selected ? '0 10px 30px rgba(16,21,18,0.08)' : '0 6px 20px rgba(16,21,18,0.05)',
       }}
     >
-      {plan.badge && (
+      {plan.trial && (
         <span
           className="absolute -top-4 right-4 rounded-full px-4 py-2 text-[13px] font-semibold"
           style={{ backgroundColor: '#e9a80f', color: '#1b1b1d' }}
         >
-          {plan.badge}
+          {plan.trial.badge}
         </span>
       )}
 
@@ -144,9 +147,9 @@ function PlanCard({ plan, selected, expanded, onSelect, onToggle }) {
               {plan.currency}
             </span>
           </span>
-          {plan.then && (
+          {plan.trial && (
             <span className="mt-1 block text-[13.5px]" style={{ color: MUTED }}>
-              {plan.then}
+              {plan.trial.then}
             </span>
           )}
         </span>
@@ -168,7 +171,7 @@ function PlanCard({ plan, selected, expanded, onSelect, onToggle }) {
 
       {expanded && (
         <ul className="mt-3 flex flex-col gap-2.5 pt-3" style={{ borderTop: '1px solid #e6efeb' }}>
-          {plan.benefits.map((b) => (
+          {plan.features.map((b) => (
             <li key={b} className="flex items-start gap-3">
               <Icon
                 name="check_circle"
@@ -247,7 +250,7 @@ export default function Start() {
         {name === 'email' && <EmailStep email={email} setEmail={setEmail} />}
         {name === 'plans' && (
           <div className="flex flex-col gap-4 pt-3">
-            {PLANS.map((p) => (
+            {PAID.map((p) => (
               <PlanCard
                 key={p.id}
                 plan={p}

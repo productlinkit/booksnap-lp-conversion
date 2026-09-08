@@ -37,56 +37,84 @@ export const VIBES = [
 ]
 
 /**
- * ⚠️ TWO CONFLICTS WITH THE LANDING PAGE, BOTH TRANSCRIBED FROM THE APP.
+ * The three plans, as the app's plan cards present them.
  *
- * 1. Price. The app's plan screen sells Premium at $2.99/month and Pro at
- *    $5.99/month. `PRICE_TABLE` in config.js says $6.10/month for Premium,
- *    taken from the catalogue API. They cannot both be right.
+ * ⚠️ PRICES AND SAVINGS ARE NOT FULLY CONFIRMED.
  *
- * 2. Ask AI. The app's Premium card reads "Experience with ASK.AI 10 chats
- *    monthly" — the same allowance the landing page calls the free-plan limit.
- *    "Full experience with ASK.AI" is a **Pro** line. The landing page's
- *    headline promise, unlimited Ask AI, is therefore a Pro feature, not a
- *    Premium one.
+ *   - The monthly prices ($0 / $2.99 / $5.99) and every feature line are
+ *     transcribed from BookSnap's own plan screens.
+ *   - The **yearly** figures are derived at the 20% the design states, because
+ *     no confirmed yearly price exists. The catalogue API disagrees with all of
+ *     it: it reports Premium Monthly at $6.10 (and $0.61 in its `en` row),
+ *     Premium Yearly at $26.23, Pro Yearly at $51.85 — which works out at 27%
+ *     and 28% off, not 20%. Replace `price.yearly` and `yearlyTotal` with the
+ *     finance-confirmed numbers; nothing else needs editing.
+ *   - "50+ book summaries" is what the plan card in the latest design says.
+ *     An earlier capture of the same card said "500+", which is also the figure
+ *     `FACTS.summaries` uses across this page. One of them is wrong.
  *
- * Left exactly as the app states it rather than quietly reconciled: a reader
- * who upgrades on this page's promise and lands on the app's Premium plan
- * would find the counter still running.
+ * ⚠️ AND NOTE WHAT PREMIUM ACTUALLY BUYS. Its card reads "Experience with
+ * ASK.AI — 10 chats", the same allowance the free plan has. "Full experience
+ * with ASK.AI" is a **Pro** line. This page's headline promise, unlimited Ask
+ * AI, is therefore a Pro feature. Left as the app states it rather than
+ * quietly reconciled.
  */
 export const PLANS = [
   {
+    id: 'free',
+    name: 'Free',
+    tagline: 'Start your reading journey at no cost.',
+    price: { monthly: '$0', yearly: '$0' },
+    yearlyTotal: '$0',
+    currency: 'USD',
+    tone: 'mint',
+    features: ['Limited preview of book summaries', 'Upgrade anytime'],
+    trial: null,
+  },
+  {
     id: 'premium',
     name: 'Premium',
-    tagline: 'Learn faster with Premium Plan.',
-    price: '$0',
+    tagline: 'The most popular choice for book lovers.',
+    price: { monthly: '$2.99', yearly: '$2.39' },
+    yearlyTotal: '$28.70',
     currency: 'USD',
-    strike: '$2.99 USD',
-    then: 'Then $2.99 / month',
-    badge: '3 Days Free Trial',
-    // The app's own line on its Payment Method screen.
-    blurb: 'Unlock the full story library and start crafting your own magical tales',
-    benefits: [
-      'Experience with ASK.AI 10 chats monthly',
-      '500+ book summaries',
-      'Full access to all text and audiobook',
+    tone: 'gold',
+    badge: 'Best deal',
+    cta: 'Subscribe Now',
+    features: [
+      'Experience with ASK.AI — 10 chats',
+      '50+ book summaries',
+      'Full access: text + audiobook',
       'Get AI recommendations',
     ],
+    trial: {
+      days: 3,
+      badge: '3 Days Free Trial',
+      price: '$0',
+      strike: '$2.99 USD',
+      then: 'Then $2.99 / month',
+      // The app's own line on its Payment Method screen.
+      blurb: 'Unlock the full story library and start crafting your own magical tales',
+    },
   },
   {
     id: 'pro',
     name: 'Pro',
-    tagline: 'Understand deeper with Pro Plan.',
-    price: '$5.99',
+    tagline: 'For power readers who want it all.',
+    price: { monthly: '$5.99', yearly: '$4.79' },
+    yearlyTotal: '$57.50',
     currency: 'USD',
-    strike: null,
-    then: null,
-    badge: null,
-    blurb: 'Understand deeper with Pro — the full Ask AI experience and smarter personalisation.',
-    benefits: [
-      'All Premium feature',
+    tone: 'dark',
+    cta: 'Upgrade to Pro',
+    features: [
+      'All Premium features',
       'Full experience with ASK.AI',
       'Smarter AI personalization',
       'Early access to newest summary',
     ],
+    trial: null,
   },
 ]
+
+/** The saving the yearly toggle advertises. See the warning above. */
+export const YEARLY_SAVE_PCT = 20

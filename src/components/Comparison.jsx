@@ -116,7 +116,7 @@ export default function Comparison() {
                       </span>
                     </span>
                     <span className="mt-1 block text-[12px] font-normal" style={{ color: 'rgba(255,255,255,0.78)' }}>
-                      Every book, ad-free
+                      $2.99 / month
                     </span>
                   </th>
                   <th scope="col" className="px-4 pb-4 align-bottom">
@@ -127,7 +127,7 @@ export default function Comparison() {
                       className="mt-0.5 block text-[12px] font-normal"
                       style={{ color: 'var(--color-on-surface-variant)' }}
                     >
-                      Ask AI without a cap
+                      $5.99 / month
                     </span>
                   </th>
                 </tr>

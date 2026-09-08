@@ -42,7 +42,8 @@ const BORDER = '#1e5341'
 
 function chosenPlan() {
   const id = new URLSearchParams(window.location.search).get('plan')
-  return PLANS.find((p) => p.id === id) || PLANS[0]
+  // Falls back to Premium, not PLANS[0] — that is the free plan now.
+  return PLANS.find((p) => p.id === id) || PLANS.find((p) => p.id === 'premium')
 }
 
 /** A field in the app's shape: label above the value, inside one box. */
@@ -124,28 +125,28 @@ export default function Checkout() {
             <h2 className="text-[21px] font-extrabold" style={{ color: DEEP }}>
               {plan.name}
             </h2>
-            {plan.badge && (
+            {plan.trial && (
               <p className="mt-2 text-[14.5px] font-bold" style={{ color: INK }}>
-                {plan.badge}
+                {plan.trial.badge}
               </p>
             )}
             <p className="mt-2 flex flex-wrap items-baseline gap-x-2.5">
               <span className="flex items-baseline gap-1.5">
                 <span className="text-[34px] font-extrabold leading-none" style={{ color: INK }}>
-                  {plan.price}
+                  {plan.trial ? plan.trial.price : plan.price.monthly}
                 </span>
                 <span className="text-[15px] font-bold" style={{ color: INK }}>
                   {plan.currency}
                 </span>
               </span>
-              {plan.strike && (
+              {plan.trial && (
                 <span className="text-[15px] line-through" style={{ color: '#9aa5a1' }}>
-                  {plan.strike}
+                  {plan.trial.strike}
                 </span>
               )}
             </p>
             <p className="mt-3 text-[15px] leading-relaxed" style={{ color: MUTED }}>
-              {plan.blurb}
+              {plan.trial ? plan.trial.blurb : plan.tagline}
             </p>
           </section>
 
